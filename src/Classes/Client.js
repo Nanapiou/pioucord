@@ -70,9 +70,5 @@ class Client extends EventsEmitter {
         return this;
     };
 };
-/**
- * @event Client.on#READY
- * @param {Object} readyObject
- */
 
 module.exports = Client;

@@ -119,13 +119,13 @@ class Rest {
                 console.log(await res.json())
                 throw new Error('Bad request (' + url + ')');
             case HTTP_RESPONSE_CODES.UNAUTHORIZED:
-                throw new Error('Unauthorized (Headers.Authorization: ' + json.headers.Authorization);
+                throw new Error('Unauthorized (Headers.Authorization: ' + options.headers.Authorization);
             case HTTP_RESPONSE_CODES.FORBIDDEN:
                 throw new Error('Can\'t access ' + url + ' with this token');
             case HTTP_RESPONSE_CODES.NOT_FOUND:
                 throw new Error('Not found (' + url + ')');
             case HTTP_RESPONSE_CODES.METHOD_NOT_ALLOWED:
-                throw new Error(`Method ${json.method} not allowed on ${url}`);
+                throw new Error(`Method ${options.method} not allowed on ${url}`);
             case HTTP_RESPONSE_CODES.TOO_MANY_REQUESTS:
                 const id = res.headers.get('x-ratelimit-bucket');
                 const remaining = Number(res.headers.get('x-ratelimit-reset-after'));
@@ -135,7 +135,7 @@ class Rest {
 
                 if (!this.rateLimits.has(id)) {
                     this.rateLimits.set(id, {
-                        endpoints: new Map([[endpoint, { requests: [] }]]),
+                        endpoints: new Map([[endpoint, []]]),
                         requests: [],
                         baseTime: baseTime,
                     });

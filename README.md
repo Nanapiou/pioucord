@@ -109,7 +109,7 @@ for (const file of readdirSync(path)) {
 // Listenning messages
 const prefix = '!';
 client.on('MESSAGE_CREATE', message => {
-    if (message.author.bot || !message.startsWith(prefix)) return;
+    if (message.author.bot || !message.content.startsWith(prefix)) return;
 
     const args = message.content.split(/ +/);
     const command = client.commands.get(args.shift().slice(prefix.length));
@@ -118,6 +118,8 @@ client.on('MESSAGE_CREATE', message => {
 
     command.execute(message, args);
 });
+
+client.login('token goes here as always');
 ```
 
 And then, put some files in the commands folder which looks like:
@@ -146,7 +148,7 @@ If you don't want to wait (and you are right), you are free to add some function
 
 ```js
 client.on('MESSAGE_CREATE', message => {
-    if (message.author.bot || !message.startsWith(prefix)) return;
+    if (message.author.bot || !message.content.startsWith(prefix)) return;
 
     const args = message.content.split(/ +/);
     const command = client.commands.get(args.shift().slice(prefix.length));
