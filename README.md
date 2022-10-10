@@ -1,9 +1,9 @@
 # Pioucord
 
-*Donc exept too much from this package for now, if you want something easier to use , then use [discord.js](https://www.npmjs.com/package/discord.js).*
+*Don't except too much from this package for now, if you want something easier to use , then use [discord.js](https://www.npmjs.com/package/discord.js).*
 
 This package is an API wrapper for discord.
-It help in different point, such as:
+It helps in different point, such as:
 
 - Connection to the gateway with a WebSocket (including shards)
 - Requests to the API
@@ -49,7 +49,7 @@ Here, when the bot will see a message with `!ping` as content, it will send `Pon
 
 Since there's no classes for now, to reply to a message, you need to add the field `message_reference` in the message payload, check [here](https://discord.com/developers/docs/resources/channel#message-reference-object-message-reference-structure) for more infos.
 
-It will looks like:
+It will look like:
 
 ```js
 client.rest.post(`/channels/${message.channel_id}/messages`, {
@@ -83,9 +83,9 @@ If you don't put any, it will identify to the gateway without providing shards.
 
 It isn't supported by the package itself, it's much better to let the user create it himself.
 
-### A little handler exemple
+### A little handler example
 
-If you want, you can create a commands handler, which will make your bot easier to manage.
+If you want, you can create a commands' handler, which will make your bot easier to manage.
 
 *You can create an events one if you want, but I will not show it here.*
 
@@ -138,7 +138,7 @@ module.exports = {
 };
 ```
 
-*Call it as you want, it wont change anything, but try to make something understandable.*
+*Call it as you want, it won't change anything, but try to make something understandable.*
 
 ### Upgrade the handler
 
