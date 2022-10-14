@@ -128,7 +128,8 @@ And then, put some files in the commands folder which looks like:
 module.exports = {
     name: 'ping',
     execute: (message, args) => {
-        client.rest.post(`/channels/${message.channel_id}/messages`, {
+        // The client is in each events objects
+        message.client.rest.post(`/channels/${message.channel_id}/messages`, {
             content: 'Pong!',
             message_reference: {
                 message_id: message.id
