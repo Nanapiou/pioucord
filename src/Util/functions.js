@@ -20,8 +20,11 @@ async function request(url, options) {
 /**
  * Build some data from a gateway payload (Only work with op 0)
  * @param {Shard} shard The shard who received the event
- * @param {Object} payload The event data payload
- * @returns {Array<String,Object>}
+ * @param {object} payload The event data payload
+ * @param {string} payload.t
+ * @param {object} payload.d
+ * @param {number} payload.op
+ * @returns {(string|object)[]}
  */
 function buildEventData(shard, payload) {
     if (payload.op !== 0 || !payload.t || typeof payload.d != "object") throw new Error('Invalid payload received');
