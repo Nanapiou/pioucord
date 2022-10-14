@@ -52,8 +52,8 @@ class WebSocketManager extends EventsEmitter {
                     this.shards.set(0, new Shard(this));
                 } else {
                     this.emit('debug', 'FULLY STARTED!');  
-                    if (this.shardsCount != this.options.shards) this.emit('debug', 'WARNING: Shard cound different from shards recommanded by discord.');
-                };
+                    if (this.shardsCount != this.options.shards) this.emit('debug', 'WARNING: Shard count different from shards recommended by discord.');
+                }
                 delete this.lastShardIndex;
             } else {
                 if (!this.shardsCount) this.shardsCount = shard[1];
@@ -61,8 +61,8 @@ class WebSocketManager extends EventsEmitter {
 
                 setTimeout(() => this.shards.set(shard[0], new Shard(this, shard[0])), shardIndex % this.options.session_start_limit.max_concurrency == 0 ? 5000 : 0);
                 this.lastShardIndex++;
-            };
-        };
+            }
+        }
     }
 
     /**
@@ -74,6 +74,6 @@ class WebSocketManager extends EventsEmitter {
         this.shards.forEach(shard => total += shard.ping);
         return total / this.shards.size;
     };
-};
+}
 
 module.exports = WebSocketManager;

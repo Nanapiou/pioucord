@@ -106,7 +106,7 @@ for (const file of readdirSync(path)) {
     client.commands.set(command.name, command);
 };
 
-// Listenning messages
+// Listening messages
 const prefix = '!';
 client.on('MESSAGE_CREATE', message => {
     if (message.author.bot || !message.content.startsWith(prefix)) return;

@@ -77,7 +77,7 @@ class Rest {
     /**
      * Make a request.
      * @param {String} url 
-     * @param {FetchOptions} options 
+     * @param {FetchOptions} options
      * @param {Array<FileObject>} [files] 
      * @returns {Promise} The response body
      */
@@ -92,19 +92,17 @@ class Rest {
                 const file = files[index];
                 if (!(file.name && file.data)) {
                     throw new Error("Files need 'name' and 'data' fields");
-                    return {};
                 }
                 const extension = file.name.match(/(?<!\.)\.[a-z]+/)?.[0].slice(1);
                 if (!['jpg', 'jpeg', 'png', 'webp', 'gif', 'json'].includes(extension)) {
                     throw new Error('Invalid file extension (' + extension + ')');
-                    return {};
-                };
+                }
                 form.append(`files[${index}]`, file.data, { contentType: 'image/' + extension, filename: file.name });
             }
             options.body = form;
         } else {
             options.body = JSON.stringify(options.data);
-        };
+        }
         const res = await request(url, options);
         switch (res.status) {
             case HTTP_RESPONSE_CODES.NO_CONTENT:
@@ -139,11 +137,11 @@ class Rest {
                         requests: [],
                         baseTime: baseTime,
                     });
-                };
+                }
                 const bucket = this.rateLimits.get(id);
                 if (!bucket.endpoints.has(endpoint)) {
                     bucket.endpoints.set(endpoint,  []);
-                };
+                }
                 const entry = bucket.endpoints.get(endpoint);
 
                 const limit = Number(res.headers.get('x-ratelimit-limit'));
@@ -153,11 +151,11 @@ class Rest {
                 return new Promise(resolve => {
                     setTimeout(() => {
                         resolve(this.request(...entry.shift()));
-                        if (entry.length == 0) bucket.endpoints.delete(endpoint);
+                        if (entry.length === 0) bucket.endpoints.delete(endpoint);
                     }, bucket.baseTime * Math.floor((entry.length - 1) / limit) + remaining  * 1000);
                 });
             default:
-                throw new Error('Unknow http status: ' + res.status);
+                throw new Error('Unknown http status: ' + res.status);
         }
     };
 
@@ -211,6 +209,6 @@ class Rest {
     put(path, data, files) {
         return this.request(this.baseURL + path, { method: 'PUT', headers: this.headers, data }, files);
     };
-};
+}
 
 module.exports = Rest;

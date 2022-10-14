@@ -14,8 +14,8 @@ module.exports.GATEWAY_OPCODES = _enum([
 ]);
 
 module.exports.GATEWAY_CLOSE_EVENT_CODES = _enum([
-    { description: "UNKNOW_ERROR", reconnect: true },
-    { description: "UNKNOW_OPCODE", reconnect: true },
+    { description: "UNKNOWN_ERROR", reconnect: true },
+    { description: "UNKNOWN_OPCODE", reconnect: true },
     { description: "DECODE_ERROR", reconnect: true },
     { description: "NOT_AUTHENTICATED", reconnect: true },
     { description: "AUTHENTICATION_FAILED", reconnect: false },
@@ -57,13 +57,13 @@ function _enum(arr, padding=0, fct=e=>e) {
         }
     });
     return obj;
-};
+}
 
 function _mirror(obj, fn=e=>e) {
     const n = {};
     for (const key in obj) {
         n[key] = obj[key];
         n[obj[key]] = fn(key)
-    };
+    }
     return n;
-};
+}

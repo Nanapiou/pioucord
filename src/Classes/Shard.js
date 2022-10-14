@@ -27,13 +27,14 @@ class Shard {
      * @param {WebSocketManager} wsManager 
      * @param {Number} shardId 
      */
-    constructor(wsManager, shardId) {
+    constructor(wsManager, shardId=undefined) {
         this.wsManager = wsManager;
         this.shardId = shardId;
         this.ping = 100;
+        this.session_id = null;
         this.ws = new WebSocket(wsManager.options.url);
 
-        this.#wsListenners();
+        this.#wsListeners();
     };
     
     /**
@@ -87,7 +88,7 @@ class Shard {
     /**
      * To handle websocket's messages received
      * @private
-     * @param {APIpayload} data 
+     * @param {APIpayload} data
      */
     #message(data) {
         this.wsManager.emit('debug', "Op: " + GATEWAY_OPCODES[data.op] + (data.s ? " Seq: " + data.s : ''), this.shardId);
@@ -122,14 +123,14 @@ class Shard {
                     this.#heartbeat();
                 }, this.heartbeat_interval);
                 break;
-        };
+        }
     };
 
     /**
-     * Just used to launch websocket's listenners
+     * Just used to launch websocket's listeners
      * @private
      */
-    #wsListenners() {
+    #wsListeners() {
         this.ws.on('open', () => {
             this.wsManager.emit('debug', 'WebSocket connected!');
         });
@@ -144,7 +145,7 @@ class Shard {
                 if (close.reconnect) {
                     this.wsManager.emit('debug', close.description + "... Reconnecting", this.shardId)
                     this.ws = new WebSocket(this.wsManager.options.url);
-                    this.#wsListenners();
+                    this.#wsListeners();
                 } else {
                     this.ws.removeAllListeners();
                     this.wsManager.emit('debug', "Websocket closed: " + close.description, this.shardId);
@@ -154,11 +155,11 @@ class Shard {
                 // Reconnect
                 setTimeout(() => {
                     if (Date.now() - this.session_timestamp > 120000) throw new Error('Cannot connect to the gateway');
-                    this.ws = new WebSocket(this.options.url);
-                    this.#wsListenners();
+                    this.ws = new WebSocket(this.wsManager.options.url);
+                    this.#wsListeners();
                 }, 5000);
                 clearTimeout(this.ack_timeout);
-            };
+            }
         });
 
         this.ws.on('error', e => {
@@ -180,7 +181,7 @@ class Shard {
     /**
      * Delete a shard
      * @private
-     * @param {Boolean} [close=true] Wether the ws will be closed or not _**Don't touch it as an user of the package, or it will leave a ws connection working alone in background**_
+     * @param {Boolean} [close=true] Whether the ws will be closed or not _**Don't touch it as a user of the package, or it will leave a ws connection working alone in background**_
      */
     delete(close=true) {
         if (close) this.ws.close(4015);
@@ -188,6 +189,6 @@ class Shard {
         clearTimeout(this.ack_timeout);
         this.wsManager.shards.delete(this.shardId);
     };
-};
+}
 
 module.exports = Shard;

@@ -15,7 +15,7 @@ const fetch = require('node-fetch').default;
  */
 async function request(url, options) {
     return fetch(url, options)
-};
+}
 
 /**
  * Build some data from a gateway payload (Only work with op 0)
@@ -34,10 +34,10 @@ function buildEventData(shard, payload) {
             client.user = payload.d.user;
             shard.wsManager.startShard();
             break;
-    };
+    }
     // const camelCase = payload.t.replace(/_?[A-Z]/g, e => e[0] == "_" ? e : e.toLowerCase()); Not used for now
     return [payload.t, Object.assign(payload.d, { client })];
-};
+}
 
 module.exports = {
     buildEventData,
