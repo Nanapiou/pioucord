@@ -36,7 +36,7 @@ class Client extends EventsEmitter {
      */
     constructor(gatewayOptions) {
         super();
-        this.gatewayOptions = gatewayOptions;
+        this.gatewayOptions = typeof gatewayOptions.intents === 'object' ? gatewayOptions.intents.reduce((a, b) => a + b, 0) : gatewayOptions;
         this.rest = new Rest({ 
             dns: 'discord.com',
             version: 10,

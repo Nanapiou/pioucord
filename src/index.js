@@ -5,6 +5,8 @@ module.exports= {
     WebSocketManager,
     Shard,
     Rest,
+    GatewayIntents: require('./Util/GatewayIntents'),
+    Routes: require('./Util/Routes'),
     Constants: require('./Util/Constants'),
-    functions: require('./Util/functions')
-}
+    functions: require('./Util/functions'),
+};

@@ -1,5 +1,4 @@
 const fetch = require('node-fetch').default;
-
 /**
  * @typedef FetchOptions
  * @property {"GET"|"POST"|"PUT"|"PATCH"|"DELETE"} method
