@@ -20,3 +20,5 @@ export class GatewayIntents {
     static AUTO_MODERATION_CONFIGURATION = (1 << 20);
     static AUTO_MODERATION_EXECUTION = (1 << 21);
 };
+
+module.exports = GatewayIntents;
