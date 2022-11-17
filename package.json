@@ -8,6 +8,7 @@
   },
   "author": "Nanapiou#6666",
   "license": "ISC",
+  "type": "module",
   "dependencies": {
     "form-data": "4.0.0",
     "node-fetch": "2.6.7",

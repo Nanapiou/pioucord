@@ -1,4 +1,4 @@
-const fetch = require('node-fetch').default;
+import fetch from 'node-fetch'
 
 /**
  * @typedef FetchOptions
@@ -13,7 +13,7 @@ const fetch = require('node-fetch').default;
  * @param {FetchOptions} options 
  * @returns {Promise<Response>}
  */
-async function request(url, options) {
+export async function request(url, options) {
     return fetch(url, options)
 }
 
@@ -26,7 +26,7 @@ async function request(url, options) {
  * @param {number} payload.op
  * @returns {(string|object)[]}
  */
-function buildEventData(shard, payload) {
+export function buildEventData(shard, payload) {
     if (payload.op !== 0 || !payload.t || typeof payload.d != "object") throw new Error('Invalid payload received');
     const { client } = shard.wsManager;
     switch (payload.t) {
@@ -37,9 +37,4 @@ function buildEventData(shard, payload) {
     }
     // const camelCase = payload.t.replace(/_?[A-Z]/g, e => e[0] == "_" ? e : e.toLowerCase()); Not used for now
     return [payload.t, Object.assign(payload.d, { client })];
-}
-
-module.exports = {
-    buildEventData,
-    request
 }

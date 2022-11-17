@@ -1,13 +1,13 @@
-const EventsEmitter = require('node:events');
-const Client = require('./Client');
-const Shard = require('./Shard');
+import EventsEmitter from 'node:events'
+import { Client } from './Client.js'
+import { Shard } from './Shard.js'
 
 /**
  * A manager for the websocket, handle shards.
  * Only receive the `debug` event for now.
  * @extends {EventsEmitter}
  */
-class WebSocketManager extends EventsEmitter {
+export class WebSocketManager extends EventsEmitter {
     /**
      * @param {Client} client 
      */
@@ -75,5 +75,3 @@ class WebSocketManager extends EventsEmitter {
         return total / this.shards.size;
     };
 }
-
-module.exports = WebSocketManager;

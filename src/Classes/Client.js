@@ -1,6 +1,6 @@
-const WebSocketManager = require('./WebSocketManager');
-const Rest = require('./Rest');
-const EventsEmitter = require('node:events');
+import { WebSocketManager } from './WebSocketManager.js';
+import { Rest } from './Rest.js';
+import EventsEmitter from'node:events';
 
 /**
  * @typedef {Object} PresenceOptions
@@ -36,7 +36,7 @@ class Client extends EventsEmitter {
      */
     constructor(gatewayOptions) {
         super();
-        this.gatewayOptions = gatewayOptions;
+        this.gatewayOptions = typeof gatewayOptions.intents === 'object' ? gatewayOptions.intents.reduce((a, b) => a + b, 0) : gatewayOptions;
         this.rest = new Rest({ 
             dns: 'discord.com',
             version: 10,
@@ -71,4 +71,4 @@ class Client extends EventsEmitter {
     };
 };
 
-module.exports = Client;
+export { Client };

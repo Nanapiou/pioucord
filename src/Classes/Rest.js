@@ -1,6 +1,6 @@
-const FormData = require('form-data');
-const { request } = require('../Util/functions');
-const { HTTP_RESPONSE_CODES } = require('../Util/Constants');
+import FormData from 'form-data';
+import { request } from '../Util/functions.js';
+import { HTTP_RESPONSE_CODES } from '../Util/Constants.js';
 
 /**
  * @typedef RestOptions
@@ -211,4 +211,4 @@ class Rest {
     };
 }
 
-module.exports = Rest;
+export { Rest };

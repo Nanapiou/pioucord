@@ -1,4 +1,4 @@
-module.exports.GATEWAY_OPCODES = _enum([
+export const GATEWAY_OPCODES = _enum([
     "DISPATCH",
     "HEARTBEAT",
     "IDENTIFY",
@@ -13,7 +13,7 @@ module.exports.GATEWAY_OPCODES = _enum([
     "HEARTBEAT_ACK"
 ]);
 
-module.exports.GATEWAY_CLOSE_EVENT_CODES = _enum([
+export const GATEWAY_CLOSE_EVENT_CODES = _enum([
     { description: "UNKNOWN_ERROR", reconnect: true },
     { description: "UNKNOWN_OPCODE", reconnect: true },
     { description: "DECODE_ERROR", reconnect: true },
@@ -34,7 +34,7 @@ module.exports.GATEWAY_CLOSE_EVENT_CODES = _enum([
     { description: "NO_ACK", reconnect: true },
 ], 4000, e => e.description);
 
-module.exports.HTTP_RESPONSE_CODES = _mirror({
+export const HTTP_RESPONSE_CODES = _mirror({
     "200": "OK",
     "201": "CREATED",
     "204": "NO_CONTENT",

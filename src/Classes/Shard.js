@@ -1,7 +1,7 @@
-const WebSocket = require('ws');
-const WebSocketManager = require('./WebSocketManager');
-const { buildEventData } = require('../Util/functions');
-const { GATEWAY_OPCODES, GATEWAY_CLOSE_EVENT_CODES } = require('../Util/Constants');
+import WebSocket from 'ws';
+import { WebSocketManager } from './WebSocketManager.js';
+import { buildEventData } from '../Util/functions.js';
+import { GATEWAY_OPCODES, GATEWAY_CLOSE_EVENT_CODES } from '../Util/Constants.js';
 
 /**
  * @typedef APIpayload
@@ -22,7 +22,7 @@ const { GATEWAY_OPCODES, GATEWAY_CLOSE_EVENT_CODES } = require('../Util/Constant
 /**
  * A single connection to the gateway, receiving specific events
  */
-class Shard {
+export class Shard {
     /**
      * @param {WebSocketManager} wsManager 
      * @param {Number} shardId 
@@ -190,5 +190,3 @@ class Shard {
         this.wsManager.shards.delete(this.shardId);
     };
 }
-
-module.exports = Shard;

@@ -1,10 +1,12 @@
-const { Client, WebSocketManager, Shard, Rest } = require('./Classes/index');
-
-module.exports= {
+import { Client, WebSocketManager, Shard, Rest } from './Classes/index.js';
+import { Constants, functions, GatewayIntents, Routes} from './Util/index.js';
+export {
     Client,
     WebSocketManager,
     Shard,
     Rest,
-    Constants: require('./Util/Constants'),
-    functions: require('./Util/functions')
-}
+    GatewayIntents,
+    Routes,
+    Constants,
+    functions
+};
