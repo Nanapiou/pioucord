@@ -34,7 +34,7 @@ export function buildEventData(shard, payload) {
             client.user = payload.d.user;
             shard.wsManager.startShard();
             break;
-    }
+    };
     // const camelCase = payload.t.replace(/_?[A-Z]/g, e => e[0] == "_" ? e : e.toLowerCase()); Not used for now
     return [payload.t, Object.assign(payload.d, { client })];
-}
+};
