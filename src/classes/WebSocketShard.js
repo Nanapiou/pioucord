@@ -206,7 +206,7 @@ export default class WebSocketShard {
      * @param {IdentifyOptions} options
      * @returns {*}
      */
-    identify(options=this.sessionOptions) {
+    identify(options=this.sessionOptions) {  // TODO Use sharding
         this.manager.emit('debug', this.shardId, 'Identifying');
         this.sessionOptions = options;
         if (this.shardId === null) {
