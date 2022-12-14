@@ -1,4 +1,5 @@
 import { StatusCode } from 'status-code-enum';
+import fetch from "node-fetch";
 
 /**
  * @typedef RestOptions
