@@ -16,7 +16,7 @@ To know more about intents, check [here](https://discord.com/developers/docs/top
 To know more about presence, check [here](https://discord.com/developers/docs/topics/gateway#update-presence).
 
 ```js
-const { Client, ActivityType, Routes } = require('pioucord');
+import { Client, ActivityType, Routes } from 'pioucord';
 const client = new Client({
     intents: ['Guilds', 'GuildMessages', 'MessageContent'],
     presence: {
@@ -71,7 +71,7 @@ To know more about shards, check [here](https://discord.com/developers/docs/topi
 You can use specific shards to start your bot with:
 
 ```js
-const { Client } = require('pioucord');
+import { Client } from 'pioucord';
 const client = new Client({
     intents: 'some intents, check above',
     shards: [0, 2],
@@ -92,8 +92,8 @@ If you want, you can create a commands' handler, which will make your bot easier
 *You can create an events one if you want, but I will not show it here.*
 
 ```js
-const { readdirSync } = require('node:fs'); // Used to read dirs, need an absolute path
-const { Client } = require('pioucord');
+import { readdirSync } from 'node:fs'; // Used to read dirs, need an absolute path
+import { Client } from 'pioucord';
 
 // Simple client creation
 const client = new Client({
