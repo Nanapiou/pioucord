@@ -16,15 +16,15 @@ To know more about intents, check [here](https://discord.com/developers/docs/top
 To know more about presence, check [here](https://discord.com/developers/docs/topics/gateway#update-presence).
 
 ```js
-const { Client } = require('pioucord');
+const { Client, ActivityType, Routes } = require('pioucord');
 const client = new Client({
-    intents: (1 << 9) | (1 << 15), // GUILD_MESSAGES and MESSAGE_CONTENT, equals to 33280
+    intents: ['Guilds', 'GuildMessages', 'MessageContent'],
     presence: {
         status: 'dnd',
         activities: [
             {
                 name: '!ping',
-                type: 0 // Playing
+                type: ActivityType.Playing
             }
         ]
     }
@@ -36,7 +36,7 @@ client.on('READY', () => {
 
 client.on('MESSAGE_CREATE', message => {
     if (message.content == "!ping") {
-        client.rest.post(`/channels/${message.channel_id}/messages`, {
+        client.rest.post(Routes.channelMessages(message.channel_id), {
             content: 'Pong!'
         });
     }
@@ -52,7 +52,7 @@ Since there's no classes for now, to reply to a message, you need to add the fie
 It will look like:
 
 ```js
-client.rest.post(`/channels/${message.channel_id}/messages`, {
+client.rest.post(Routes.channelMessages(message.channel_id), {
     content: 'Pong!',
     message_reference: {
         message_id: message.id
@@ -70,10 +70,8 @@ You can use specific shards to start your bot with:
 const { Client } = require('pioucord');
 const client = new Client({
     intents: 'some intents, check above',
-    shards: [
-        [0, 3],
-        [2, 3]
-    ]
+    shards: [0, 2],
+    shardCount: 3
 });
 ```
 
@@ -95,7 +93,7 @@ const { Client } = require('pioucord');
 
 // Simple client creation
 const client = new Client({
-    intents: 33280, // GUILD_MESSAGES and MESSAGE_CONTENT
+    intents: ['GuildMessages', 'MessageContent']
 });
 
 // Reading the commands folder
@@ -125,11 +123,13 @@ client.login('token goes here as always');
 And then, put some files in the commands folder which looks like:
 
 ```js
+import { Routes } from 'pioucord';
+
 module.exports = {
     name: 'ping',
     execute: (message, args) => {
         // The client is in each events objects
-        message.client.rest.post(`/channels/${message.channel_id}/messages`, {
+        message.client.rest.post(Routes.channelMessages(message.channel_id), {
             content: 'Pong!',
             message_reference: {
                 message_id: message.id
@@ -159,10 +159,10 @@ client.on('MESSAGE_CREATE', message => {
     // Here, modifications
     const functions = {
         channelSend: (data) => {
-            return client.rest.post(`/channels/${message.channel_id}/messages`, data);
+            return client.rest.post(Routes.channelMessages(message.channel_id), data);
         },
         messageReply: (data) => {
-            return client.rest.post(`/channels/${message.channel_id}/messages`, Object.assign(data,
+            return client.rest.post(Routes.channelMessages(message.channel_id), Object.assign(data,
                 {
                     message_reference: {
                         message_id: message.id
