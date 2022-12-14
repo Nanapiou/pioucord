@@ -1,6 +1,6 @@
 {
   "name": "pioucord",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "type": "module",
   "description": "A little help to use the discord api: handle gateways connection and help in rest api.",
   "main": "src/index.js",
