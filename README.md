@@ -30,11 +30,11 @@ const client = new Client({
     }
 });
 
-client.on('READY', () => {
-    console.log(`Logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
+client.ws.on('READY', (data) => {
+    console.log(`Logged in as ${data.user.username}#${data.user.discriminator} (${data.user.id})`);
 });
 
-client.on('MESSAGE_CREATE', message => {
+client.ws.on('MESSAGE_CREATE', message => {
     if (message.content == "!ping") {
         client.rest.post(Routes.channelMessages(message.channel_id), {
             content: 'Pong!'
@@ -59,6 +59,10 @@ client.rest.post(Routes.channelMessages(message.channel_id), {
     }
 });
 ```
+
+You may have noticed two points:
+- We should use `client.ws.on` instead of `client.on` to listen to events. (`client.on` is not implemented yet, and will be used for constructed objects)
+- We cannot use `client.user` in the `READY` event. (Events received from `ws` don't wait for the building of `client`)
 
 ## Sharding
 
@@ -189,3 +193,12 @@ module.exports = {
 ```
 
 See? Much clearer!
+
+## Debug
+
+That's not something very important, but you can use the `debug` event on the ws, like:
+```js
+client.ws.on('debug', (shardId, text) => {
+    console.log(`Shard ${shardId ?? 'MAIN'} | ${text}`);
+});
+```
