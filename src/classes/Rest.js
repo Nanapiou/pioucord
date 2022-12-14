@@ -207,6 +207,28 @@ export default class Rest {
     };
 
     /**
+     * Make a patch request
+     * @param {string} endpoint
+     * @param {object} data
+     * @returns {Promise<*> | void}
+     */
+    patch(endpoint, data) {
+        if (data.files !== undefined) return console.log("|!| Files aren't supported") ;
+        else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'PATCH');
+    };
+
+    /**
+     * Make a put request
+     * @param {string} endpoint
+     * @param {object} data
+     * @returns {Promise<*> | void}
+     */
+    put(endpoint, data) {
+        if (data.files !== undefined) return console.log("|!| Files aren't supported") ;
+        else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'PUT');
+    };
+
+    /**
      * Build a full url from the provided endpoint
      * @param {string} endpoint
      * @returns {string}
