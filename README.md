@@ -2,12 +2,18 @@
 
 *Don't except too much from this package for now, if you want something easier to use , then use [discord.js](https://www.npmjs.com/package/discord.js).*
 
-This package is an API wrapper for discord.
+`pioucord` is an ES package that allows you to create a discord bot with ease.
 It helps in different point, such as:
 
 - Connection to the gateway with a WebSocket (including shards)
 - Requests to the API
 - Rate limits
+
+## Installation
+
+```bash
+npm install pioucord
+```
 
 ## A simple bot
 
