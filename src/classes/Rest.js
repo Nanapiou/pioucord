@@ -68,6 +68,7 @@ export default class Rest {
     setToken(token) {
         if (!(/[\w-]{24}\.[\w-]{6}\.[\w-]{27}/.test(token) || /mfa\.[\w-]{84}/.test(token))) throw new Error('Not a token');
         this.token = token;
+        return this;
     };
 
     /**
