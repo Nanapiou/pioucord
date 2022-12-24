@@ -1,7 +1,7 @@
 import WebSocketShard from "./WebSocketShard.js";
 import EventEmitter from 'node:events';
 
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 export default class WebSocketManager extends EventEmitter {
     constructor(client, gatewayParams) {
