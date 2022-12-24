@@ -1,6 +1,8 @@
 import WebSocketShard from "./WebSocketShard.js";
 import EventEmitter from 'node:events';
 
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export default class WebSocketManager extends EventEmitter {
     constructor(client, gatewayParams) {
         super();
@@ -24,10 +26,11 @@ export default class WebSocketManager extends EventEmitter {
         if (this.shardCount === null) return this.createShard();
         else {
             let last;
-            for (const i of this.shardsId) {
-                last = await this.createShard(i);
+            for (let i = 1; i < this.shardsId.length + 1; i++) {
+                last = await this.createShard(this.shardsId[i - 1]);
+                if (i % this.sessionStartLimit.max_concurrency === 0) await wait(5_000);
             }
-            return last
+            return last;
         }
     };
 
@@ -73,6 +76,11 @@ export default class WebSocketManager extends EventEmitter {
      * @param {boolean} useRecommendedShardCount
      */
     setShardsData(shardsId, shardCount, useRecommendedShardCount) {
+        if (shardsId.some(shardId => typeof shardId !== "number")) throw new Error("Shard ID should be a number");
+        if (shardsId.some(shardId => shardId < 0)) throw new Error("Shard ID cannot be negative");
+        if (shardsId.some(shardId => shardId >= shardCount)) throw new Error("Shard ID cannot be greater than shardCount");
+        if (shardsId.some((shardId, i) => shardsId.indexOf(shardId) !== i)) throw new Error("Shard ID cannot be duplicated");
+        if (shardsId.length > shardCount) throw new Error("Shard ID cannot be greater than shardCount");
         this.shardsId = shardsId;
         this._shardCount = shardCount;
         this.useRecommendedShardCount = useRecommendedShardCount;
