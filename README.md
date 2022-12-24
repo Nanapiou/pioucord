@@ -143,6 +143,8 @@ module.exports = {
 };
 ```
 
+You can access the client from every events.
+
 *Call it as you want, it won't change anything, but try to make something understandable.*
 
 ### Upgrade the handler

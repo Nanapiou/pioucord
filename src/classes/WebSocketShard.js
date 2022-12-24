@@ -164,6 +164,7 @@ export default class WebSocketShard {
                 this.gatewayUrl = data.resume_gateway_url;
                 break;
         }
+        Object.assign(data, {shardId: this.shardId, client: this.manager.client}); // Client is here while there isn't a better way to get it (with classes)
         this.manager.emit(name, data);
     }
 
