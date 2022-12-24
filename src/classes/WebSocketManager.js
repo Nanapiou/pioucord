@@ -54,6 +54,18 @@ export default class WebSocketManager extends EventEmitter {
         this.sessionStartLimit = options.session_start_limit;
     };
 
+
+    /**
+     * Set new options
+     * @param {object} options
+     * @param {string} options.url
+     */
+    setGatewayOptions(options) {
+        this.gatewayUrl = options.url;
+        this.useRecommendedShardCount = false;
+        this._shardCount = null;
+    };
+
     /**
      * Set the shards' data
      * @param {number[]} shardsId

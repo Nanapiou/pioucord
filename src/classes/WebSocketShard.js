@@ -184,7 +184,7 @@ export default class WebSocketShard {
      */
     heartbeat() {
         this.manager.emit('debug', this.shardId, "Heartbeat");
-        if (this.ackTimeout === null) this.ackTimeout = setTimeout(this.zombied.bind(this), this.heartbeatTimeInterval * 2.5);
+        if (this.ackTimeout === null) this.ackTimeout = setTimeout(() => this.zombied(), this.heartbeatTimeInterval * 2.5);
         this.heartbeatSendTimestamp = Date.now();
         return this.sendPayload({
             op: GatewayOPCodes.Heartbeat,

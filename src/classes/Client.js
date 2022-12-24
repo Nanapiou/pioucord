@@ -27,21 +27,23 @@ import BitField from "./BitField.js";
  * @property {number[]} [shards=[]]
  * @property {number | null} [shardCount=null]
  * @property {boolean} [useRecommendedShardCount=false]
+ * @property {boolean} [userBot=false]
  */
 
 export default class Client {
     /**
      * @param {ClientOptions} clientOptions
      */
-    constructor({ intents, presence, shards, shardCount, useRecommendedShardCount }) {
+    constructor({ intents, presence, shards, shardCount, useRecommendedShardCount, userBot }) {
         if (shards?.length > 0 && shardCount === null && !useRecommendedShardCount) throw new Error("Cannot specify shards without shardCount");
         if ((shardCount !== null || useRecommendedShardCount) && shards?.length < 1) throw new Error("If you provide a shardCount, you must also provide shards");
 
         this.intents = intents instanceof BitField ? intents : new BitField(intents, GatewayIntentBits);
         this.presence = presence;
         this.user = null;
+        this.userBot = userBot ?? false;
 
-        this.rest = new Rest({ version: '10', authPrefix: 'Bot' });
+        this.rest = new Rest({ version: '10', authPrefix: userBot ? undefined : 'Bot' });
         this.ws = new WebSocketManager(this, {
             v: '10',
             encoding: 'json'
@@ -57,9 +59,13 @@ export default class Client {
     async login(token) {
         this.token = token;
         this.rest.setToken(token);
-        const gatewayBot = await this.rest.get(Routes.gatewayBot());
-        this.ws.setBotGatewayOptions(gatewayBot);
-
+        if (this.userBot) {
+            const gatewayUser = await this.rest.get(Routes.gateway());
+            this.ws.setGatewayOptions(gatewayUser);
+        } else {
+            const gatewayBot = await this.rest.get(Routes.gatewayBot());
+            this.ws.setBotGatewayOptions(gatewayBot);
+        }
         const user = await this.ws.startShards();
         this.user = user;
         return user;
