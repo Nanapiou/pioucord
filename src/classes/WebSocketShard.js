@@ -130,8 +130,8 @@ export default class WebSocketShard {
                 break;
             case GatewayOPCodes.HeartbeatAck:
                 this.ping = Date.now() - this.heartbeatSendTimestamp;
-                // clearTimeout(this.ackTimeout);
-                // this.ackTimeout = null;
+                clearTimeout(this.ackTimeout);
+                this.ackTimeout = null;
                 break;
             case GatewayOPCodes.Reconnect:
                 this.zombied();
