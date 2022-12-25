@@ -89,7 +89,7 @@ export default class WebSocketShard {
             this.handleMessage(data);
         });
         return new Promise(resolve => {
-            this.loginTimeout = setTimeout(this.zombied, 10_000);
+            this.loginTimeout = setTimeout(this.zombied.bind(this), 10_000);
             this.readyResolve = resolve;
         });
     };
@@ -130,8 +130,8 @@ export default class WebSocketShard {
                 break;
             case GatewayOPCodes.HeartbeatAck:
                 this.ping = Date.now() - this.heartbeatSendTimestamp;
-                clearTimeout(this.ackTimeout);
-                this.ackTimeout = null;
+                // clearTimeout(this.ackTimeout);
+                // this.ackTimeout = null;
                 break;
             case GatewayOPCodes.Reconnect:
                 this.zombied();
@@ -155,6 +155,8 @@ export default class WebSocketShard {
      */
     handleEvent(name, data) {
         this.manager.emit('debug', this.shardId, name);
+        Object.assign(data, {shardId: this.shardId, client: this.manager.client}); // Client is here while there isn't a better way to get it (with classes)
+        this.manager.emit(name, data);
         switch (name) {
             case 'READY':
                 clearTimeout(this.loginTimeout);
@@ -163,9 +165,12 @@ export default class WebSocketShard {
                 this.sessionId = data.session_id;
                 this.gatewayUrl = data.resume_gateway_url;
                 break;
+            case 'RESUMED':
+                clearTimeout(this.loginTimeout);
+                this.loginTimeout = null;
+                this.readyResolve();
+                break;
         }
-        Object.assign(data, {shardId: this.shardId, client: this.manager.client}); // Client is here while there isn't a better way to get it (with classes)
-        this.manager.emit(name, data);
     }
 
     /**
@@ -185,7 +190,7 @@ export default class WebSocketShard {
      */
     heartbeat() {
         this.manager.emit('debug', this.shardId, "Heartbeat");
-        if (this.ackTimeout === null) this.ackTimeout = setTimeout(() => this.zombied(), this.heartbeatTimeInterval * 2.5);
+        if (this.ackTimeout === null) this.ackTimeout = setTimeout(this.zombied.bind(this), this.heartbeatTimeInterval * 2.5);
         this.heartbeatSendTimestamp = Date.now();
         return this.sendPayload({
             op: GatewayOPCodes.Heartbeat,
