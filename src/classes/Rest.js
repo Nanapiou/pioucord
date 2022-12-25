@@ -203,7 +203,7 @@ export default class Rest {
      * @param {object} data
      * @returns {Promise<*> | void}
      */
-    post(endpoint, data) {
+    post(endpoint, data={}) {
         if (data.files !== undefined) return console.log("|!| Files aren't supported") ;
         else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'POST');
     };
@@ -214,7 +214,7 @@ export default class Rest {
      * @param {object} data
      * @returns {Promise<*> | void}
      */
-    patch(endpoint, data) {
+    patch(endpoint, data={}) {
         if (data.files !== undefined) return console.log("|!| Files aren't supported") ;
         else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'PATCH');
     };
@@ -225,7 +225,7 @@ export default class Rest {
      * @param {object} data
      * @returns {Promise<*> | void}
      */
-    put(endpoint, data) {
+    put(endpoint, data={}) {
         if (data.files !== undefined) return console.log("|!| Files aren't supported") ;
         else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'PUT');
     };
