@@ -134,7 +134,7 @@ export default class WebSocketShard {
                 this.ackTimeout = null;
                 break;
             case GatewayOPCodes.Reconnect:
-                this.zombied();
+                this.ws.close(GatewayCloseCodes.UnknownError);
                 break;
             case GatewayOPCodes.Dispatch:
                 this.handleEvent(data.t, data.d);
