@@ -28,13 +28,14 @@ import BitField from "./BitField.js";
  * @property {number | null} [shardCount=null]
  * @property {boolean} [useRecommendedShardCount=false]
  * @property {boolean} [userBot=false]
+ * @property {string} [apiVersion="10"]
  */
 
 export default class Client {
     /**
      * @param {ClientOptions} clientOptions
      */
-    constructor({ intents, presence, shards, shardCount, useRecommendedShardCount, userBot }) {
+    constructor({ intents, presence, shards, shardCount, useRecommendedShardCount, userBot, apiVersion }) {
         if (shards?.length > 0 && shardCount === null && !useRecommendedShardCount) throw new Error("Cannot specify shards without shardCount");
         if ((shardCount !== null || useRecommendedShardCount) && shards?.length < 1) throw new Error("If you provide a shardCount, you must also provide shards");
 
@@ -42,10 +43,11 @@ export default class Client {
         this.presence = presence;
         this.user = null;
         this.userBot = userBot ?? false;
+        this.apiVersion = apiVersion ?? "10";
 
-        this.rest = new Rest({ version: '10', authPrefix: userBot ? undefined : 'Bot' });
+        this.rest = new Rest({ version: apiVersion, authPrefix: userBot ? undefined : 'Bot' });
         this.ws = new WebSocketManager(this, {
-            v: '10',
+            v: apiVersion,
             encoding: 'json'
         });
         this.ws.setShardsData(shards ?? [], shardCount ?? null, useRecommendedShardCount);
