@@ -262,4 +262,18 @@ export default class WebSocketShard {
             }
         });
     };
+
+    /**
+     * Start to receive events from the guild
+     * @param {string} guildId
+     */
+    addGuildEvents(guildId) {
+        this.sendPayload({
+            op: 14, // For an unknown reason, this is the "secret" op code to ask for guilds events
+            d: {
+                guild_id: guildId,
+                typing: true
+            }
+        });
+    }
 };

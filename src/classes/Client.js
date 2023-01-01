@@ -45,9 +45,9 @@ export default class Client {
         this.userBot = userBot ?? false;
         this.apiVersion = apiVersion ?? "10";
 
-        this.rest = new Rest({ version: apiVersion, authPrefix: userBot ? undefined : 'Bot' });
+        this.rest = new Rest({ version: this.apiVersion, authPrefix: userBot ? undefined : 'Bot' });
         this.ws = new WebSocketManager(this, {
-            v: apiVersion,
+            v: this.apiVersion,
             encoding: 'json'
         });
         this.ws.setShardsData(shards ?? [], shardCount ?? null, useRecommendedShardCount);
@@ -79,5 +79,13 @@ export default class Client {
      */
     setPresence(presenceObject) {
         this.ws.shards.forEach(shard => shard.setPresence(presenceObject));
+    };
+
+    /**
+     * Start to receive events from the guild (just send it to every shard)
+     * @param {string} guildId
+     */
+    addGuildEvents(guildId) {
+        this.ws.shards.forEach(shard => shard.addGuildEvents(guildId));
     };
 }

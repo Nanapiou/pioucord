@@ -99,7 +99,7 @@ export default class Rest {
             case StatusCode.ClientErrorNotFound:
             case StatusCode.ClientErrorMethodNotAllowed:
                 const { message, code, errors } = await res.json();
-                throw new Error(`${StatusCode[res.status]}\nMessage: ${message}\nCode: ${code}\nErrors: ${JSON.stringify(errors, null, 2)}`);
+                throw new Error(`${StatusCode[res.status]}\nURL: ${url}\nMessage: ${message}\nCode: ${code}\nErrors: ${JSON.stringify(errors, null, 2)}`);
             case StatusCode.ClientErrorTooManyRequests:
             case StatusCode.ServerErrorBadGateway:
                 const args = [url, body, headers, method];
