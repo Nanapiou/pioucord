@@ -86,6 +86,7 @@ export default class Client {
      * @param {string} guildId
      */
     addGuildEvents(guildId) {
+        if (!this.userBot) throw new Error("Cannot add guild events if you are using a bot account");
         this.ws.shards.forEach(shard => shard.addGuildEvents(guildId));
     };
 }
