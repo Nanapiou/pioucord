@@ -9,6 +9,10 @@
   },
   "author": "Nanapiou#6666",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nanapiou/pioucord.git"
+  },
   "dependencies": {
     "discord-api-types": "^0.37.22",
     "node-fetch": "2.6.7",
