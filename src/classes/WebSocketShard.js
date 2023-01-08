@@ -156,7 +156,6 @@ export default class WebSocketShard {
     handleEvent(name, data) {
         this.manager.emit('debug', this.shardId, name);
         Object.assign(data, {shardId: this.shardId, client: this.manager.client}); // Client is here while there isn't a better way to get it (with classes)
-        this.manager.emit(name, data);
         switch (name) {
             case 'READY':
                 clearTimeout(this.loginTimeout);
@@ -174,6 +173,7 @@ export default class WebSocketShard {
                 this.readyResolve();
                 break;
         }
+        this.manager.emit(name, data);
     }
 
     /**
