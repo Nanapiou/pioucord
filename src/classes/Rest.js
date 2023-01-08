@@ -99,7 +99,7 @@ export default class Rest {
             case StatusCode.ClientErrorNotFound:
             case StatusCode.ClientErrorMethodNotAllowed:
                 const { message, code, errors } = await res.json();
-                throw new Error(`${StatusCode[res.status]}\nURL: ${url}\nMessage: ${message}\nCode: ${code}\nErrors: ${JSON.stringify(errors, null, 2)}`);
+                return Promise.reject(`${StatusCode[res.status]}\nURL: ${url}\nMessage: ${message}\nCode: ${code}\nErrors: ${JSON.stringify(errors, null, 2)}`);
             case StatusCode.ClientErrorTooManyRequests:
             case StatusCode.ServerErrorBadGateway:
                 const args = [url, body, headers, method];
@@ -116,7 +116,7 @@ export default class Rest {
                 const endpoint = this.extractEndpoint(url);
                 return this.addToQueue(endpoint, args);
             default:
-                throw new Error('Unknown HTTP code: ' + res.status)
+                return Promise.reject('Unknown HTTP code: ' + res.status)
         }
     };
 
