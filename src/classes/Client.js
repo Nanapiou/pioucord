@@ -68,9 +68,7 @@ export default class Client {
             const gatewayBot = await this.rest.get(Routes.gatewayBot());
             this.ws.setBotGatewayOptions(gatewayBot);
         }
-        const user = await this.ws.startShards();
-        this.user = user;
-        return user;
+        return await this.ws.startShards();
     };
 
     /**

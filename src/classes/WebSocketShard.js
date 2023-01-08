@@ -164,6 +164,9 @@ export default class WebSocketShard {
                 this.readyResolve(data.user);
                 this.sessionId = data.session_id;
                 this.gatewayUrl = data.resume_gateway_url;
+
+                this.manager.client.user = data.user;
+                this.manager.client.application = data.application;
                 break;
             case 'RESUMED':
                 clearTimeout(this.loginTimeout);
