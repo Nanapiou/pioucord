@@ -42,6 +42,7 @@ export default class Client {
         this.intents = intents instanceof BitField ? intents : new BitField(intents, GatewayIntentBits);
         this.presence = presence;
         this.user = null;
+        this.startedTimestamp = null;
         this.userBot = userBot ?? false;
         this.apiVersion = apiVersion ?? "10";
 
@@ -68,6 +69,7 @@ export default class Client {
             const gatewayBot = await this.rest.get(Routes.gatewayBot());
             this.ws.setBotGatewayOptions(gatewayBot);
         }
+        this.startedTimestamp = Date.now();
         return await this.ws.startShards();
     };
 
@@ -87,4 +89,8 @@ export default class Client {
         if (!this.userBot) throw new Error("Cannot add guild events if you are using a bot account");
         this.ws.shards.forEach(shard => shard.addGuildEvents(guildId));
     };
+
+    get uptime() {
+        return this.startedTimestamp ? Date.now() - this.startedTimestamp : null;
+    }
 }
