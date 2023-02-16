@@ -2,3 +2,4 @@ node_modules/
 .idea/
 old/
 test/
+/.vscode/sftp.json
