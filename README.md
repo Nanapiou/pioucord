@@ -37,7 +37,7 @@ const client = new Client({
 });
 
 client.ws.on('READY', (data) => {
-    console.log(`Logged in as ${data.user.username}#${data.user.discriminator} (${data.user.id})`);
+    console.log(`Logged in as ${client.user.username}#${client.user.discriminator} (${client.user.id})`);
 });
 
 client.ws.on('MESSAGE_CREATE', message => {
@@ -68,7 +68,8 @@ client.rest.post(Routes.channelMessages(message.channel_id), {
 
 You may have noticed two points:
 - We should use `client.ws.on` instead of `client.on` to listen to events. (`client.on` is not implemented yet, and will be used for constructed objects)
-- We cannot use `client.user` in the `READY` event. (Events received from `ws` don't wait for the building of `client`)
+- We can use `client.user` as soon as the `READY` event is thrown.
+- Events are in screaming case, and the provided parameters are raw data from the gateway, check event list [here](https://discord.com/developers/docs/topics/gateway-events#receive-events).
 
 ## Sharding
 
@@ -98,7 +99,7 @@ If you want, you can create a commands' handler, which will make your bot easier
 *You can create an events one if you want, but I will not show it here.*
 
 ```js
-import { readdirSync } from 'node:fs'; // Used to read dirs, need an absolute path
+import { readdir } from 'node:fs/promises'; // Used to read dirs, need an absolute path
 import { Client } from 'pioucord';
 
 // Simple client creation
@@ -109,8 +110,8 @@ const client = new Client({
 // Reading the commands folder
 client.commands = new Map();
 const path = 'absolute path goes here';
-for (const file of readdirSync(path)) {
-    const command = require(path + file);
+for (const file of await readdir(path)) {
+    const command = (await import('file://' + path + file)).default;
     client.commands.set(command.name, command);
 };
 
@@ -135,7 +136,7 @@ And then, put some files in the commands folder which looks like:
 ```js
 import { Routes } from 'pioucord';
 
-module.exports = {
+export default {
     name: 'ping',
     execute: (message, args) => {
         // The client is in each events objects
@@ -149,7 +150,7 @@ module.exports = {
 };
 ```
 
-You can access the client from every events.
+You can access the client from every event.
 
 *Call it as you want, it won't change anything, but try to make something understandable.*
 
@@ -192,7 +193,7 @@ client.on('MESSAGE_CREATE', message => {
 And then, the `ping` command file:
 
 ```js
-module.exports = {
+export default {
     name: 'ping',
     execute: (message, args, functions) => {
         functions.messageReply({ content: 'Pong!' });
