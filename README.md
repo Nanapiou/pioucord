@@ -1,6 +1,14 @@
 # Pioucord
 
-*Don't except too much from this package for now, if you want something easier to use , then use [discord.js](https://www.npmjs.com/package/discord.js).*
+<div align="center">
+	<p>
+		<a href="https://www.npmjs.com/package/pioucord"><img src="https://img.shields.io/npm/dt/pioucord?logo=npm" alt="npm download" /></a>
+		<a href="https://github.com/Nanapiou/pioucord"><img src="https://img.shields.io/github/package-json/v/Nanapiou/pioucord?logo=github" alt="github version" /></a>
+	</p>
+</div>
+
+*Don't except too much from this package for now, if you want something easier to use , then
+use [discord.js](https://www.npmjs.com/package/discord.js).*
 
 `pioucord` is an ES package that allows you to create a discord bot with ease.
 It helps in different point, such as:
@@ -22,7 +30,8 @@ To know more about intents, check [here](https://discord.com/developers/docs/top
 To know more about presence, check [here](https://discord.com/developers/docs/topics/gateway#update-presence).
 
 ```js
-import { Client, ActivityType, Routes } from 'pioucord';
+import {Client, ActivityType, Routes} from 'pioucord';
+
 const client = new Client({
     intents: ['Guilds', 'GuildMessages', 'MessageContent'],
     presence: {
@@ -53,7 +62,10 @@ client.login('Some secret token goes here');
 
 Here, when the bot will see a message with `!ping` as content, it will send `Pong!` in the same channel.
 
-Since there's no classes for now, to reply to a message, you need to add the field `message_reference` in the message payload, check [here](https://discord.com/developers/docs/resources/channel#message-reference-object-message-reference-structure) for more infos.
+Since there's no classes for now, to reply to a message, you need to add the field `message_reference` in the message
+payload,
+check [here](https://discord.com/developers/docs/resources/channel#message-reference-object-message-reference-structure)
+for more infos.
 
 It will look like:
 
@@ -67,9 +79,12 @@ client.rest.post(Routes.channelMessages(message.channel_id), {
 ```
 
 You may have noticed two points:
-- We should use `client.ws.on` instead of `client.on` to listen to events. (`client.on` is not implemented yet, and will be used for constructed objects)
+
+- We should use `client.ws.on` instead of `client.on` to listen to events. (`client.on` is not implemented yet, and will
+  be used for constructed objects)
 - We can use `client.user` as soon as the `READY` event is thrown.
-- Events are in screaming case, and the provided parameters are raw data from the gateway, check event list [here](https://discord.com/developers/docs/topics/gateway-events#receive-events).
+- Events are in screaming case, and the provided parameters are raw data from the gateway, check event
+  list [here](https://discord.com/developers/docs/topics/gateway-events#receive-events).
 
 ## Sharding
 
@@ -78,7 +93,8 @@ To know more about shards, check [here](https://discord.com/developers/docs/topi
 You can use specific shards to start your bot with:
 
 ```js
-import { Client } from 'pioucord';
+import {Client} from 'pioucord';
+
 const client = new Client({
     intents: 'some intents, check above',
     shards: [0, 2],
@@ -99,8 +115,8 @@ If you want, you can create a commands' handler, which will make your bot easier
 *You can create an events one if you want, but I will not show it here.*
 
 ```js
-import { readdir } from 'node:fs/promises'; // Used to read dirs, need an absolute path
-import { Client } from 'pioucord';
+import {readdir} from 'node:fs/promises'; // Used to read dirs, need an absolute path
+import {Client} from 'pioucord';
 
 // Simple client creation
 const client = new Client({
@@ -113,7 +129,8 @@ const path = 'absolute path goes here';
 for (const file of await readdir(path)) {
     const command = (await import('file://' + path + file)).default;
     client.commands.set(command.name, command);
-};
+}
+;
 
 // Listening messages
 const prefix = '!';
@@ -134,7 +151,7 @@ client.login('token goes here as always');
 And then, put some files in the commands folder which looks like:
 
 ```js
-import { Routes } from 'pioucord';
+import {Routes} from 'pioucord';
 
 export default {
     name: 'ping',
@@ -156,9 +173,11 @@ You can access the client from every event.
 
 ### Upgrade the handler
 
-You may be tired because of all these `client.rest`, because the package still don't have classes (it should be out for the __V2__).
+You may be tired because of all these `client.rest`, because the package still don't have classes (it should be out for
+the __V2__).
 
-If you don't want to wait (and you are right), you are free to add some functions to your handler, here is a little example:
+If you don't want to wait (and you are right), you are free to add some functions to your handler, here is a little
+example:
 
 ```js
 client.on('MESSAGE_CREATE', message => {
@@ -181,7 +200,7 @@ client.on('MESSAGE_CREATE', message => {
                         message_id: message.id
                     }
                 }
-            ));            
+            ));
         }
     };
 
@@ -196,7 +215,7 @@ And then, the `ping` command file:
 export default {
     name: 'ping',
     execute: (message, args, functions) => {
-        functions.messageReply({ content: 'Pong!' });
+        functions.messageReply({content: 'Pong!'});
     }
 };
 ```
@@ -206,6 +225,7 @@ See? Much clearer!
 ## Debug
 
 That's not something very important, but you can use the `debug` event on the ws, like:
+
 ```js
 client.ws.on('debug', (shardId, text) => {
     console.log(`Shard ${shardId ?? 'MAIN'} | ${text}`);
