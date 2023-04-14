@@ -92,5 +92,9 @@ export default class Client {
 
     get uptime() {
         return this.startedTimestamp ? Date.now() - this.startedTimestamp : null;
+    };
+
+    destroy() {
+        this.ws.destroy();
     }
 }

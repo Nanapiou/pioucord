@@ -89,5 +89,9 @@ export default class WebSocketManager extends EventEmitter {
     get shardCount() {
         if (this.useRecommendedShardCount) return this.recommendedShardsCount;
         else return this._shardCount;
+    };
+
+    destroy() {
+        this.shards.forEach(shard => shard.destroy());
     }
 };

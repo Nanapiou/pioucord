@@ -70,6 +70,9 @@ export default class WebSocketShard {
                 case 4015:  // Zombied
                     setTimeout(this.setupWs.bind(this), Math.floor(this.heartbeatTimeInterval / 2));
                     break;
+                case 4016: // Voluntary close
+                    this.manager.emit('debug', this.shardId, 'Voluntary close');
+                    break;
                 case 1001: // Going away, sometimes happens, act by restarting the connection
                 case GatewayCloseCodes.UnknownError:
                 case GatewayCloseCodes.UnknownOpcode:
@@ -279,5 +282,10 @@ export default class WebSocketShard {
                 typing: true
             }
         });
+    }
+
+    destroy() {
+        this.ws.close(4016);
+        this.manager.shards.delete(this.shardId);
     }
 };
