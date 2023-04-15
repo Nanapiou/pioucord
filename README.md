@@ -104,6 +104,32 @@ const client = new Client({
 
 If you don't put any, it will identify to the gateway without providing shards.
 
+## Uploading files
+
+To know how files upload works, check [here](https://discord.com/developers/docs/reference#uploading-files).
+
+To upload files, you just need to use the `files` field in the payload, and put an array of files.
+
+```js
+// ...
+client.ws.on('MESSAGE_CREATE', message => {
+    if (message.content == "!image") {
+        client.rest.post(Routes.channelMessages(message.channel_id), {
+            content: 'Beautiful image!',
+            message_reference: {
+                message_id: message.id
+            },
+            files: [{
+              name: 'image.png',
+              description: 'Image',
+              file: "A buffer goes here"
+            }]
+        });
+    }
+});
+// ...
+```
+
 ## Handler
 
 It isn't supported by the package itself, it's much better to let the user create it himself.
