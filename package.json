@@ -1,6 +1,6 @@
 {
     "name": "pioucord",
-    "version": "1.1.23",
+    "version": "1.1.24",
     "type": "module",
     "description": "A little help to use the discord api.\nHandle connection to the gateway and provide a fast way to make requests to discord.\nThis package is not finished, it is still in development.",
     "main": "src/index.js",
@@ -15,7 +15,8 @@
     },
     "dependencies": {
         "discord-api-types": "^0.37.34",
-        "node-fetch": "2.6.7",
+        "form-data": "^4.0.0",
+        "node-fetch": "^2.6.7",
         "status-code-enum": "^1.0.0",
         "ws": "8.8.0"
     },
@@ -31,4 +32,3 @@
         "node": ">=16.9.0"
     }
 }
-

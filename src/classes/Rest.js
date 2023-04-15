@@ -1,5 +1,6 @@
-import { StatusCode } from 'status-code-enum';
+import {StatusCode} from 'status-code-enum';
 import fetch from 'node-fetch';
+import FormData from 'form-data';
 
 /**
  * @typedef RestOptions
@@ -26,7 +27,7 @@ export default class Rest {
     /**
      * @param {RestOptions} restOptions
      */
-    constructor({ authPrefix, version, baseUrl, token }) {
+    constructor({authPrefix, version, baseUrl, token}) {
         this.authPrefix = authPrefix ?? null;
         this.version = version;
         this.baseUrl = baseUrl ?? "https://discord.com/api";
@@ -74,15 +75,15 @@ export default class Rest {
     /**
      * Make a request, using the rest instance
      * @param {string} url
-     * @param {string} [body]
+     * @param {string | FormData} [body]
      * @param {object} [headers=this.defaultHeaders]
      * @param {"GET" | "POST" | "PATCH" | "PUT" | "DELETE" | "HEAD"} [method="GET"]
      * @returns {Promise<any>}
      */
-    async request(url, body, headers=this.defaultHeaders, method='GET') {
+    async request(url, body, headers = this.defaultHeaders, method = 'GET') {
         if (this.token === null) throw new Error('No token');
         const endpoint = this.extractEndpoint(url);
-        const res = await fetch(url, { method, body, headers });
+        const res = await fetch(url, {method, body, headers}).catch(err => err);
 
         const endpointData = this._updateEndpointData(endpoint, res);
 
@@ -98,7 +99,7 @@ export default class Rest {
             case StatusCode.ClientErrorForbidden:
             case StatusCode.ClientErrorNotFound:
             case StatusCode.ClientErrorMethodNotAllowed:
-                const { message, code, errors } = await res.json();
+                const {message, code, errors} = await res.json();
                 return Promise.reject(`${StatusCode[res.status]}\nURL: ${url}\nMessage: ${message}\nCode: ${code}\nErrors: ${JSON.stringify(errors, null, 2)}`);
             case StatusCode.ClientErrorTooManyRequests:
             case StatusCode.ServerErrorBadGateway:
@@ -152,7 +153,7 @@ export default class Rest {
             };
             this.endpointsQueue.set(endpoint, endpointData);
         } else {
-            Object.assign(endpointData,  {
+            Object.assign(endpointData, {
                 remaining,
                 bucket
             });
@@ -203,9 +204,29 @@ export default class Rest {
      * @param {object} data
      * @returns {Promise<*> | void}
      */
-    post(endpoint, data={}) {
-        if (data.files !== undefined) return console.log("|!| Files aren't supported") ;
-        else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'POST');
+    post(endpoint, data = {}) {
+        if (data.files?.length > 0) {
+            const formData = new FormData();
+            const {files} = data;
+            delete data.files;
+            data.attachments = files.map((file, i) => ({
+                filename: file.name,
+                description: file.description,
+                id: i
+            }))
+            formData.append('payload_json', JSON.stringify(data), {
+                contentType: 'application/json',
+            });
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                formData.append(`files[${i}]`, file.file, {
+                    filename: file.name,
+                });
+            }
+            const headers = this.defaultHeaders;
+            delete headers['content-type']; // So form-data can set the content-type
+            return this.request(this.buildFullUrl(endpoint), formData, headers, 'POST');
+        } else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'POST');
     };
 
     /**
@@ -214,8 +235,8 @@ export default class Rest {
      * @param {object} data
      * @returns {Promise<*> | void}
      */
-    patch(endpoint, data={}) {
-        if (data.files !== undefined) return console.log("|!| Files aren't supported") ;
+    patch(endpoint, data = {}) {
+        if (data.files?.length > 0) return console.log("|!| Files aren't supported");
         else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'PATCH');
     };
 
@@ -225,8 +246,8 @@ export default class Rest {
      * @param {object} data
      * @returns {Promise<*> | void}
      */
-    put(endpoint, data={}) {
-        if (data.files !== undefined) return console.log("|!| Files aren't supported") ;
+    put(endpoint, data = {}) {
+        if (data.files?.length > 0) return console.log("|!| Files aren't supported");
         else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'PUT');
     };
 
