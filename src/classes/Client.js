@@ -25,7 +25,7 @@ import BitField from "./BitField.js";
  * @property {IntentResolvable} intents
  * @property {PresenceData} [presence]
  * @property {number[]} [shards=[]]
- * @property {number | null} [shardCount=null]
+ * @property {number | null} [shardsCount=null]
  * @property {boolean} [useRecommendedShardCount=false]
  * @property {boolean} [userBot=false]
  * @property {string} [apiVersion="10"]
@@ -35,9 +35,9 @@ export default class Client {
     /**
      * @param {ClientOptions} clientOptions
      */
-    constructor({ intents, presence, shards, shardCount, useRecommendedShardCount, userBot, apiVersion }) {
-        if (shards?.length > 0 && shardCount === null && !useRecommendedShardCount) throw new Error("Cannot specify shards without shardCount");
-        if ((shardCount !== null || useRecommendedShardCount) && shards?.length < 1) throw new Error("If you provide a shardCount, you must also provide shards");
+    constructor({ intents, presence, shards, shardsCount, useRecommendedShardCount, userBot, apiVersion }) {
+        if (shards?.length > 0 && shardsCount === null && !useRecommendedShardCount) throw new Error("Cannot specify shards without shardsCount");
+        if ((shardsCount !== null || useRecommendedShardCount) && shards?.length < 1) throw new Error("If you provide a shardsCount, you must also provide shards");
 
         this.intents = intents instanceof BitField ? intents : new BitField(intents, GatewayIntentBits);
         this.presence = presence;
@@ -51,7 +51,7 @@ export default class Client {
             v: this.apiVersion,
             encoding: 'json'
         });
-        this.ws.setShardsData(shards ?? [], shardCount ?? null, useRecommendedShardCount);
+        this.ws.setShardsData(shards ?? [], shardsCount ?? null, useRecommendedShardCount);
     };
 
     /**

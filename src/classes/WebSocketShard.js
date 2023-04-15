@@ -231,7 +231,7 @@ export default class WebSocketShard {
             return this.sendPayload({
                 op: GatewayOPCodes.Identify,
                 d: Object.assign({
-                    shard: [this.shardId, this.manager.shardCount]
+                    shard: [this.shardId, this.manager.shardsCount]
                 }, options)
             });
         }

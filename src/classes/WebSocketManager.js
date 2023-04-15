@@ -23,7 +23,7 @@ export default class WebSocketManager extends EventEmitter {
     };
 
     async startShards() {
-        if (this.shardCount === null) return this.createShard();
+        if (this.shardsCount === null) return this.createShard();
         else {
             let last;
             for (let i = 1; i < this.shardsId.length + 1; i++) {
@@ -52,6 +52,7 @@ export default class WebSocketManager extends EventEmitter {
      * @param {number} options.session_start_limit.max_concurrency
      */
     setBotGatewayOptions(options) {
+        if (this._shardCount ?? 1 !== options.shards) console.warn("The shard count is not the recommended one");
         this.gatewayUrl = options.url;
         this.recommendedShardsCount = options.shards;
         this.sessionStartLimit = options.session_start_limit;
@@ -72,21 +73,21 @@ export default class WebSocketManager extends EventEmitter {
     /**
      * Set the shards' data
      * @param {number[]} shardsId
-     * @param {number} shardCount
+     * @param {number} shardsCount
      * @param {boolean} useRecommendedShardCount
      */
-    setShardsData(shardsId, shardCount, useRecommendedShardCount) {
+    setShardsData(shardsId, shardsCount, useRecommendedShardCount) {
         if (shardsId.some(shardId => typeof shardId !== "number")) throw new Error("Shard ID should be a number");
         if (shardsId.some(shardId => shardId < 0)) throw new Error("Shard ID cannot be negative");
-        if (shardsId.some(shardId => shardId >= shardCount)) throw new Error("Shard ID cannot be greater than shardCount");
+        if (shardsId.some(shardId => shardId >= shardsCount)) throw new Error("Shard ID cannot be greater than shardsCount");
         if (shardsId.some((shardId, i) => shardsId.indexOf(shardId) !== i)) throw new Error("Shard ID cannot be duplicated");
-        if (shardsId.length > shardCount) throw new Error("Shard ID cannot be greater than shardCount");
+        if (shardsId.length > shardsCount) throw new Error("Shard ID cannot be greater than shardsCount");
         this.shardsId = shardsId;
-        this._shardCount = shardCount;
+        this._shardCount = shardsCount;
         this.useRecommendedShardCount = useRecommendedShardCount;
     };
     
-    get shardCount() {
+    get shardsCount() {
         if (this.useRecommendedShardCount) return this.recommendedShardsCount;
         else return this._shardCount;
     };

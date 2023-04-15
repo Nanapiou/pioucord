@@ -98,7 +98,7 @@ import {Client} from 'pioucord';
 const client = new Client({
     intents: 'some intents, check above',
     shards: [0, 2],
-    shardCount: 3
+    shardsCount: 3
 });
 ```
 
