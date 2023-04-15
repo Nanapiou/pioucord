@@ -176,6 +176,9 @@ export default class WebSocketShard {
                 this.loginTimeout = null;
                 this.readyResolve();
                 break;
+            case 'VOICE_SERVER_UPDATE':
+                this.manager.client.voiceManager.handleVoiceServerUpdate(data);
+                break
         }
         this.manager.emit(name, data);
     }
