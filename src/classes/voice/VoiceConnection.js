@@ -11,6 +11,19 @@ export default class VoiceConnection {
         this.heartbeatTimeInterval = 0;
         this.heartbeatIntervalId = null;
         this.ackTimeout = null;
+
+        // Received in the READY payload
+        this.adress = null;
+        this.port = null;
+        this.ssrc = null;
+        this.modes = null;
+        this.streams = null;
+
+        this.videoCodec = null;
+        this.secretKey = null;
+        this.mode = null;
+        this.audioCodec = null;
+        this.mediaSessionId = null;
     }
 
     setupWS(url=this.gatewayUrl) {
@@ -24,12 +37,14 @@ export default class VoiceConnection {
         this.ws.once('open', () => this.manager.emit('debug', this.guildId, 'Open!'));
         this.ws.once('close', (code, buffer) => {
             this.manager.emit('debug', this.guildId, `Close: ${code} ${buffer}`);
+            this.ws.removeAllListeners();
+            this.ws = null;
             clearInterval(this.heartbeatIntervalId);
             clearTimeout(this.ackTimeout);
             this.ackTimeout = null;
             this.manager.voices.delete(this.guildId); // For now
         });
-        this.ws.once('message', buffer => {
+        this.ws.on('message', buffer => {
             const data = JSON.parse(buffer.toString());
             this.handleMessage(data);
         });
@@ -47,6 +62,20 @@ export default class VoiceConnection {
         });
     }
 
+    selectUDPProtocol() {
+        this.sendPayload({
+            op: 1,
+            d: {
+                protocol: 'udp',
+                data: {
+                    address: this.adress,
+                    port: this.port,
+                    mode: this.modes.includes('xsalsa20_poly1305') ? 'xsalsa20_poly1305' : this.modes[0]
+                }
+            }
+        })
+    }
+
     handleMessage(data) {
         this.manager.emit('debug', this.guildId, `Message: ${data.op} ${JSON.stringify(data.d)}`);
         switch (data.op) {
@@ -58,6 +87,27 @@ export default class VoiceConnection {
             case 6: // Ack
                 clearTimeout(this.ackTimeout);
                 this.ackTimeout = null;
+                break;
+            case 2: // Ready
+                this.manager.emit('debug', this.guildId, 'Ready');
+                // console.log(data.d);
+                this.adress = data.d.ip;
+                this.port = data.d.port;
+                this.ssrc = data.d.ssrc;
+                this.modes = data.d.modes;
+                this.streams = data.d.streams;
+                this.selectUDPProtocol();
+                break;
+            case 4: // Session Description
+                console.log(data.d);
+                this.videoCodec = data.d.video_codec;
+                this.secretKey = data.d.secret_key;
+                this.mode = data.d.mode;
+                this.audioCodec = data.d.audio_codec;
+                this.mediaSessionId = data.d.media_session_id;
+                break;
+            case 9: // Resumed
+                this.manager.emit('debug', this.guildId, 'Resumed');
         }
     }
 
@@ -65,6 +115,17 @@ export default class VoiceConnection {
         this.manager.emit('debug', this.guildId, 'Sending heartbeat');
         if (this.ackTimeout === null) this.ackTimeout = setTimeout(this.zombied.bind(this), this.heartbeatTimeInterval * 2.5);
         return this.sendPayload({op: 3, d: Date.now()});
+    }
+
+    speak({ microphone, soundShare, priority }) {
+        return this.sendPayload({
+            op: 5,
+            d: {
+                speaking: (microphone ?? 0) | ((soundShare ?? 0) << 1) | ((priority ?? 0) << 2),
+                delay: 0,
+                ssrc: this.ssrc,
+            }
+        });
     }
 
     sendPayload(data) {
