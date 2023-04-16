@@ -93,7 +93,7 @@ export default class WebSocketManager extends EventEmitter {
     };
 
     forGuild(guildId) {
-        const shardId = (guildId >> 22) % (this.shardsCount ?? 1);
+        const shardId = (parseInt(guildId) >> 22) % (this.shardsCount ?? 1);
         return this.shards.get(shardId);
     }
 
