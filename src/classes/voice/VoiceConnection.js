@@ -7,6 +7,8 @@ export default class VoiceConnection {
         this.channelId = channelId;
         this.token = token;
         this.gatewayUrl = 'wss://' + gatewayUrl + '?v=' + version;
+
+        // Initialized with the HELLO payload
         this.ws = null;
         this.heartbeatTimeInterval = 0;
         this.heartbeatIntervalId = null;
@@ -19,12 +21,13 @@ export default class VoiceConnection {
         this.modes = null;
         this.streams = null;
 
+        // Received in the SESSION_DESCRIPTION payload
         this.videoCodec = null;
         this.secretKey = null;
         this.mode = null;
         this.audioCodec = null;
         this.mediaSessionId = null;
-    }
+    };
 
     setupWS(url=this.gatewayUrl) {
         try {
@@ -48,7 +51,7 @@ export default class VoiceConnection {
             const data = JSON.parse(buffer.toString());
             this.handleMessage(data);
         });
-    }
+    };
 
     identify() {
         return this.sendPayload({
@@ -60,7 +63,7 @@ export default class VoiceConnection {
                 token: this.token
             }
         });
-    }
+    };
 
     selectUDPProtocol() {
         this.sendPayload({
@@ -73,8 +76,8 @@ export default class VoiceConnection {
                     mode: this.modes.includes('xsalsa20_poly1305') ? 'xsalsa20_poly1305' : this.modes[0]
                 }
             }
-        })
-    }
+        });
+    };
 
     handleMessage(data) {
         this.manager.emit('debug', this.guildId, `Message: ${data.op} ${JSON.stringify(data.d)}`);
@@ -109,13 +112,13 @@ export default class VoiceConnection {
             case 9: // Resumed
                 this.manager.emit('debug', this.guildId, 'Resumed');
         }
-    }
+    };
 
     heartbeat() {
         this.manager.emit('debug', this.guildId, 'Sending heartbeat');
         if (this.ackTimeout === null) this.ackTimeout = setTimeout(this.zombied.bind(this), this.heartbeatTimeInterval * 2.5);
         return this.sendPayload({op: 3, d: Date.now()});
-    }
+    };
 
     speak({ microphone, soundShare, priority }) {
         return this.sendPayload({
@@ -126,12 +129,12 @@ export default class VoiceConnection {
                 ssrc: this.ssrc,
             }
         });
-    }
+    };
 
     sendPayload(data) {
         console.log(data);
         return this.ws.send(JSON.stringify(data));
-    }
+    };
 
     zombied() {
         this.manager.emit('debug', this.guildId, 'Zombied');
