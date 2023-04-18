@@ -2,6 +2,7 @@ import WebSocketManager from "./WebSocketManager.js";
 import {GatewayIntentBits, Routes} from "discord-api-types/v10";
 import Rest from "./Rest.js";
 import BitField from "./BitField.js";
+import VoiceManager from "./voice/VoiceManager.js";
 
 /**
  * @typedef {number | string | BitField | IntentResolvable[]} IntentResolvable
@@ -47,6 +48,7 @@ export default class Client {
         this.apiVersion = apiVersion ?? "10";
 
         this.rest = new Rest({ version: this.apiVersion, authPrefix: userBot ? undefined : 'Bot' });
+        this.voiceManager = new VoiceManager(this);
         this.ws = new WebSocketManager(this, {
             v: this.apiVersion,
             encoding: 'json'
