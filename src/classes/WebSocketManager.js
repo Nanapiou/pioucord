@@ -1,7 +1,6 @@
 import WebSocketShard from "./WebSocketShard.js";
 import EventEmitter from 'node:events';
-
-const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+import {setTimeout as wait} from 'node:timers/promises';
 
 export default class WebSocketManager extends EventEmitter {
     constructor(client, gatewayParams) {
@@ -16,12 +15,21 @@ export default class WebSocketManager extends EventEmitter {
         this.sessionStartLimit = null;
     };
 
+    /**
+     * Create a single shard
+     * @param shardId
+     * @returns {Promise<Object>|void}
+     */
     createShard(shardId) {
         const shard = new WebSocketShard(this, this.gatewayUrl, shardId);
         this.shards.set(shardId ?? 0, shard);
         return shard.setupWs();
     };
 
+    /**
+     * Start each shard
+     * @returns {Promise<Object|void>}
+     */
     async startShards() {
         if (this.shardsCount === null) return this.createShard();
         else {
@@ -34,6 +42,10 @@ export default class WebSocketManager extends EventEmitter {
         }
     };
 
+    /**
+     * Get the average ping of all shards
+     * @returns {number}
+     */
     get ping() {
         let ping = 0;
         this.shards.forEach(shard => ping += shard.ping);
@@ -101,6 +113,11 @@ export default class WebSocketManager extends EventEmitter {
         else return this._shardCount;
     };
 
+    /**
+     * Get the shard for a guild
+     * @param guildId
+     * @returns {WebSocketShard}
+     */
     forGuild(guildId) {
         const shardId = (parseInt(guildId) >> 22) % (this.shardsCount ?? 1);
         return this.shards.get(shardId);
