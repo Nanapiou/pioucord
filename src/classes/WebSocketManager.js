@@ -86,6 +86,15 @@ export default class WebSocketManager extends EventEmitter {
         this._shardCount = shardsCount;
         this.useRecommendedShardCount = useRecommendedShardCount;
     };
+
+    /**
+     * Request guilds members through the gateway
+     * @param {RequestGuildMembersOptions} options
+     * @returns {Promise<object[]>}
+     */
+    requestGuildMembers({guildId, query, limit, presences, userIds}){
+        return this.forGuild(guildId).requestGuildMembers({guildId, query, limit, presences, userIds});
+    }
     
     get shardsCount() {
         if (this.useRecommendedShardCount) return this.recommendedShardsCount;
