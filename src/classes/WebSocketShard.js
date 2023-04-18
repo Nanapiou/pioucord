@@ -24,7 +24,7 @@ export default class WebSocketShard {
      * @param {string} gatewayUrl
      * @param {number | null} [shardId=null]
      */
-    constructor(manager, gatewayUrl, shardId=null) {
+    constructor(manager, gatewayUrl, shardId = null) {
         this.manager = manager
         this.gatewayUrl = gatewayUrl;
         this.shardId = shardId;
@@ -44,6 +44,7 @@ export default class WebSocketShard {
 
         this.readyResolve = null;
         this.loginTimeout = null;
+        this.pendingGuildMembersRequests = new Map();
     };
 
     /**
@@ -51,7 +52,7 @@ export default class WebSocketShard {
      * @param {string} url
      * @returns {Promise<object> | void} The user object
      */
-    setupWs(url=this.gatewayUrl) {
+    setupWs(url = this.gatewayUrl) {
         try {
             this.ws = new Websocket(url + '?' + stringify(this.manager.gatewayParams));
         } catch (e) {
@@ -179,6 +180,9 @@ export default class WebSocketShard {
             case 'VOICE_SERVER_UPDATE':
                 this.manager.client.voiceManager.handleVoiceServerUpdate(data);
                 break
+            case 'GUILD_MEMBERS_CHUNK':
+                this.handleGuildMembersChunk(data);
+                break;
         }
         this.manager.emit(name, data);
     }
@@ -222,7 +226,7 @@ export default class WebSocketShard {
      * @param {IdentifyOptions} options
      * @returns {*}
      */
-    identify(options=this.sessionOptions) {  // TODO Use sharding
+    identify(options = this.sessionOptions) {
         this.manager.emit('debug', this.shardId, 'Identifying');
         this.sessionOptions = options;
         if (this.shardId === null) {
@@ -261,7 +265,7 @@ export default class WebSocketShard {
      * @param {PresenceData} presence
      * @returns {*}
      */
-    setPresence({ since, activities, status, afk }) {
+    setPresence({since, activities, status, afk}) {
         return this.sendPayload({
             op: GatewayOPCodes.PresenceUpdate,
             d: {
@@ -271,6 +275,58 @@ export default class WebSocketShard {
                 afk: afk ?? false
             }
         });
+    };
+
+    /**
+     * @typedef {object} RequestGuildMembersOptions
+     * @property {string} guildId
+     * @property {?string} query
+     * @property {?number} limit
+     * @property {?boolean} presences
+     * @property {?string[]} userIds
+     */
+
+    /**
+     * Request guilds members through the gateway
+     * @param {RequestGuildMembersOptions} options
+     */
+    async requestGuildMembers({guildId, query, limit, presences, userIds}) {
+        let nonce;
+        do {
+            nonce = Math.random().toString(36).substring(2); // TODO : Find a better way to generate a nonce
+        } while (this.pendingGuildMembersRequests.has(nonce));
+        this.sendPayload({
+            op: GatewayOPCodes.RequestGuildMembers,
+            d: {
+                guild_id: guildId,
+                query: query ?? '',
+                limit: limit ?? 0,
+                presences: presences ?? false,
+                user_ids: userIds ?? [],
+                nonce
+            }
+        });
+        return await new Promise(resolve => {
+            this.pendingGuildMembersRequests.set(nonce, {
+                members: [],
+                resolve
+            });
+        });
+    };
+
+    /**
+     * Handle guild members chunk
+     * @param data
+     */
+    handleGuildMembersChunk(data) {
+        const request = this.pendingGuildMembersRequests.get(data.nonce);
+        if (request) {
+            request.members.push(...data.members);
+            if (data.chunk_index + 1 === data.chunk_count) {
+                request.resolve(request.members);
+                this.pendingGuildMembersRequests.delete(data.nonce);
+            }
+        }
     };
 
     /**
@@ -285,10 +341,10 @@ export default class WebSocketShard {
                 typing: true
             }
         });
-    }
+    };
 
     destroy() {
         this.ws.close(4016);
         this.manager.shards.delete(this.shardId);
-    }
+    };
 };
