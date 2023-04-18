@@ -206,23 +206,7 @@ export default class Rest {
      */
     post(endpoint, data = {}) {
         if (data.files?.length > 0) {
-            const formData = new FormData();
-            const {files} = data;
-            delete data.files;
-            data.attachments = files.map((file, i) => ({
-                filename: file.name,
-                description: file.description,
-                id: i
-            }))
-            formData.append('payload_json', JSON.stringify(data), {
-                contentType: 'application/json',
-            });
-            for (let i = 0; i < files.length; i++) {
-                const file = files[i];
-                formData.append(`files[${i}]`, file.file, {
-                    filename: file.name,
-                });
-            }
+            const formData = this.buildFormData(data);
             const headers = this.defaultHeaders;
             delete headers['content-type']; // So form-data can set the content-type
             return this.request(this.buildFullUrl(endpoint), formData, headers, 'POST');
@@ -236,8 +220,12 @@ export default class Rest {
      * @returns {Promise<*> | void}
      */
     patch(endpoint, data = {}) {
-        if (data.files?.length > 0) return console.log("|!| Files aren't supported");
-        else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'PATCH');
+        if (data.files?.length > 0) {
+            const formData = this.buildFormData(data);
+            const headers = this.defaultHeaders;
+            delete headers['content-type']; // So form-data can set the content-type
+            return this.request(this.buildFullUrl(endpoint), formData, headers, 'PATCH');
+        } else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'PATCH');
     };
 
     /**
@@ -247,8 +235,12 @@ export default class Rest {
      * @returns {Promise<*> | void}
      */
     put(endpoint, data = {}) {
-        if (data.files?.length > 0) return console.log("|!| Files aren't supported");
-        else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'PUT');
+        if (data.files?.length > 0) {
+            const formData = this.buildFormData(data);
+            const headers = this.defaultHeaders;
+            delete headers['content-type']; // So form-data can set the content-type
+            return this.request(this.buildFullUrl(endpoint), formData, headers, 'PUT');
+        } else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'PUT');
     };
 
     /**
@@ -259,4 +251,30 @@ export default class Rest {
     buildFullUrl(endpoint) {
         return `${this.baseUrl}/v${this.version}${endpoint}`;
     };
+
+    /**
+     * Convert a JSON to a "discord form"
+     * @param {object} data
+     * @returns {FormData}
+     */
+    buildFormData(data) {
+        const formData = new FormData();
+        const {files} = data;
+        delete data.files;
+        data.attachments = files.map((file, i) => ({
+            filename: file.name,
+            description: file.description,
+            id: i
+        }))
+        formData.append('payload_json', JSON.stringify(data), {
+            contentType: 'application/json',
+        });
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            formData.append(`files[${i}]`, file.file, {
+                filename: file.name,
+            });
+        }
+        return formData;
+    }
 };
