@@ -106,7 +106,7 @@ export default class WebSocketManager extends EventEmitter {
      */
     requestGuildMembers({guildId, query, limit, presences, userIds}){
         return this.forGuild(guildId).requestGuildMembers({guildId, query, limit, presences, userIds});
-    }
+    };
     
     get shardsCount() {
         if (this.useRecommendedShardCount) return this.recommendedShardsCount;
@@ -121,9 +121,9 @@ export default class WebSocketManager extends EventEmitter {
     forGuild(guildId) {
         const shardId = (parseInt(guildId) >> 22) % (this.shardsCount ?? 1);
         return this.shards.get(shardId);
-    }
+    };
 
     destroy() {
         this.shards.forEach(shard => shard.destroy());
-    }
+    };
 };

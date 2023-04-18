@@ -8,7 +8,7 @@ export default class VoiceManager extends EventEmitter {
         this.client = client;
         this.pending = new Map();
         this.voices = new Map();
-    }
+    };
 
     async joinVoiceChannel(channelId, {self_mute, self_deaf}={}) {
         const channel = await this.client.rest.get(Routes.channel(channelId)).catch(() => null);
@@ -39,7 +39,7 @@ export default class VoiceManager extends EventEmitter {
         this.voices.set(channel.guild_id, connection);
         connection.setupWS();
         return connection;
-    }
+    };
 
     handleVoiceServerUpdate(data) {
         this.pending.get(data.guild_id)?.resolve(data);

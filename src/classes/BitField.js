@@ -63,7 +63,7 @@ export default class BitField {
             if ((this._bitfield & bit) === bit) return true;
         }
         return false;
-    }
+    };
 
     /**
      * Convert the bitfield to an array of strings, using flags
@@ -95,7 +95,7 @@ export default class BitField {
             default:
                 throw new TypeError('Invalid type');
         }
-    }
+    };
 
     /**
      * Iterate over the bitfield

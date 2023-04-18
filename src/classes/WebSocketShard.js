@@ -151,7 +151,7 @@ export default class WebSocketShard {
                     this.identify();
                 }
         }
-    }
+    };
 
     /**
      * Handle events (op DISPATCH)
@@ -185,7 +185,7 @@ export default class WebSocketShard {
                 break;
         }
         this.manager.emit(name, data);
-    }
+    };
 
     /**
      * Send a payload to the gateway
@@ -290,11 +290,17 @@ export default class WebSocketShard {
      * Request guilds members through the gateway
      * @param {RequestGuildMembersOptions} options
      */
-    async requestGuildMembers({guildId, query, limit, presences, userIds}) {
+    requestGuildMembers({guildId, query, limit, presences, userIds}) {
         let nonce;
         do {
             nonce = Math.random().toString(36).substring(2); // TODO : Find a better way to generate a nonce
         } while (this.pendingGuildMembersRequests.has(nonce));
+        const promise = new Promise(resolve => {
+            this.pendingGuildMembersRequests.set(nonce, {
+                members: [],
+                resolve
+            });
+        });
         this.sendPayload({
             op: GatewayOPCodes.RequestGuildMembers,
             d: {
@@ -306,12 +312,7 @@ export default class WebSocketShard {
                 nonce
             }
         });
-        return await new Promise(resolve => {
-            this.pendingGuildMembersRequests.set(nonce, {
-                members: [],
-                resolve
-            });
-        });
+        return promise;
     };
 
     /**
