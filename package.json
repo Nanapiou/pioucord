@@ -14,11 +14,11 @@
         "url": "https://github.com/Nanapiou/pioucord.git"
     },
     "dependencies": {
-        "discord-api-types": "^0.37.34",
+        "discord-api-types": "^0.37.41",
         "form-data": "^4.0.0",
-        "node-fetch": "^2.6.7",
+        "node-fetch": "^2.6.9",
         "status-code-enum": "^1.0.0",
-        "ws": "8.8.0"
+        "ws": "^8.8.0"
     },
     "keywords": [
         "discord",
