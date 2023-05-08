@@ -30,5 +30,6 @@
     "homepage": "https://github.com/Nanapiou/pioucord#readme",
     "engines": {
         "node": ">=16.9.0"
-    }
+    },
+    "types": "@types/pioucord.d.ts"
 }

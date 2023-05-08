@@ -1,9 +1,9 @@
 declare module 'pioucord' {
-    type ActivityData = {
+    interface ActivityData {
         name: string,
         type: number
     }
-    type PresenceData = {
+    interface PresenceData {
         status?: "online" | "dnd" | "invisible" | "idle" | undefined;
         afk?: boolean | undefined;
         activities?: ActivityData[] | undefined;
@@ -22,15 +22,15 @@ declare module 'pioucord' {
     }
 
     interface WebSocket {
-        on(event: string, listener: (data: any) => void): this;
+        on(event: string, listener: (data: unknown) => void): this;
     }
 
     interface Rest {
-        get: (endpoint: string) => Promise<any>;
-        post: (endpoint: string, data: object) => Promise<any> | void;
-        patch: (endpoint: string, data: object) => Promise<any> | void;
-        put: (endpoint: string, data: object) => Promise<any> | void;
-        delete: (endpoint: string, data: object) => Promise<any>;
+        get: (endpoint: string) => Promise<unknown>;
+        post: (endpoint: string, data: object) => Promise<unknownn> | void;
+        patch: (endpoint: string, data: object) => Promise<unknown> | void;
+        put: (endpoint: string, data: object) => Promise<unknown> | void;
+        delete: (endpoint: string, data: object) => Promise<unknown>;
     }
 
     class Client{
@@ -44,7 +44,7 @@ declare module 'pioucord' {
             apiVersion?: string;
         });
 
-        user: any;
+        user: unknown;
         startedTimestamp: Date;
         ws: WebSocket;
         rest: Rest;
