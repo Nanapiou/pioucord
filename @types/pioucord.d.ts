@@ -4,9 +4,9 @@ declare module 'pioucord' {
         type: number
     }
     interface PresenceData {
-        status?: "online" | "dnd" | "invisible" | "idle" | undefined;
-        afk?: boolean | undefined;
-        activities?: ActivityData[] | undefined;
+        status?: "online" | "dnd" | "invisible" | "idle";
+        afk?: boolean;
+        activities?: ActivityData[] ;
     }
 
     type IntentResolvable = string[] | number
