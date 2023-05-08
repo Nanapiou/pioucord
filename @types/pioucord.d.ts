@@ -15,7 +15,7 @@ declare module 'pioucord' {
         intents?: IntentResolvable;
         presence?: PresenceData;
         shards?: number[];
-        shardsCount?: number | null;
+        shardsCount?: number;
         useRecommendedShardCount?: boolean;
         userBot?: boolean;
         apiVersion?: string;
@@ -38,7 +38,7 @@ declare module 'pioucord' {
             intents?: IntentResolvable;
             presence?: PresenceData;
             shards?: number[];
-            shardsCount?: number | null;
+            shardsCount?: number;
             useRecommendedShardCount?: boolean;
             userBot?: boolean;
             apiVersion?: string;
