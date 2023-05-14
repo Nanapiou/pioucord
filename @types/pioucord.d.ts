@@ -8,6 +8,12 @@ declare module 'pioucord' {
         afk?: boolean;
         activities?: ActivityData[] ;
     }
+    interface RestOptions {
+        authPrefix?: "Bot" | "Bearer";
+        version?: string
+        baseUrl?: string
+        token?: string
+    }
 
     type IntentResolvable = string[] | number
 
@@ -19,6 +25,7 @@ declare module 'pioucord' {
         useRecommendedShardCount?: boolean;
         userBot?: boolean;
         apiVersion?: string;
+        api?: RestOptions;
     }
 
     interface WebSocket {
@@ -27,7 +34,7 @@ declare module 'pioucord' {
 
     interface Rest {
         get: (endpoint: string) => Promise<unknown>;
-        post: (endpoint: string, data: object) => Promise<unknownn> | void;
+        post: (endpoint: string, data: object) => Promise<unknown> | void;
         patch: (endpoint: string, data: object) => Promise<unknown> | void;
         put: (endpoint: string, data: object) => Promise<unknown> | void;
         delete: (endpoint: string, data: object) => Promise<unknown>;
@@ -42,6 +49,7 @@ declare module 'pioucord' {
             useRecommendedShardCount?: boolean;
             userBot?: boolean;
             apiVersion?: string;
+            api?: RestOptions;
         });
 
         user: unknown;
@@ -55,5 +63,5 @@ declare module 'pioucord' {
         destroy: () => void;
     }
 
-    export {Client, ClientOptions, PresenceData, IntentResolvable}
+    export {Client, ClientOptions, PresenceData, IntentResolvable, RestOptions}
 }
