@@ -1,5 +1,6 @@
 import WebSocketManager from "./WebSocketManager.js";
 import {GatewayIntentBits, Routes} from "discord-api-types/v10";
+import Api from "./Api.js";
 import Rest from "./Rest.js";
 import BitField from "./BitField.js";
 import VoiceManager from "./voice/VoiceManager.js";
@@ -22,6 +23,14 @@ import VoiceManager from "./voice/VoiceManager.js";
  */
 
 /**
+ * @typedef RestOptions
+ * @property {"Bot" | "Bearer"} [authPrefix=null]
+ * @property {string} version
+ * @property {string} [baseUrl="https://discord.com/api"]
+ * @property {string} [token=null]
+ */
+
+/**
  * @typedef ClientOptions
  * @property {IntentResolvable} intents
  * @property {PresenceData} [presence]
@@ -30,13 +39,14 @@ import VoiceManager from "./voice/VoiceManager.js";
  * @property {boolean} [useRecommendedShardCount=false]
  * @property {boolean} [userBot=false]
  * @property {string} [apiVersion="10"]
+ * @property {Rest} [api=rest]
  */
 
 export default class Client {
     /**
      * @param {ClientOptions} clientOptions
      */
-    constructor({ intents, presence, shards, shardsCount, useRecommendedShardCount, userBot, apiVersion }) {
+    constructor({ intents, presence, shards, shardsCount, useRecommendedShardCount, userBot, apiVersion, api }) {
         if (shards?.length > 0 && shardsCount === null && !useRecommendedShardCount) throw new Error("Cannot specify shards without shardsCount");
         if ((shardsCount !== null || useRecommendedShardCount) && shards?.length < 1) throw new Error("If you provide a shardsCount, you must also provide shards");
 
@@ -46,8 +56,8 @@ export default class Client {
         this.startedTimestamp = null;
         this.userBot = userBot ?? false;
         this.apiVersion = apiVersion ?? "10";
-
         this.rest = new Rest({ version: this.apiVersion, authPrefix: userBot ? undefined : 'Bot' });
+        this.api = api ?? new Api(this.rest);
         this.voiceManager = new VoiceManager(this);
         this.ws = new WebSocketManager(this, {
             v: this.apiVersion,
