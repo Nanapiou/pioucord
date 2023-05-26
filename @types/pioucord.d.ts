@@ -36,8 +36,8 @@ declare module 'pioucord' {
         get: (endpoint: string) => Promise<unknown>;
         post: (endpoint: string, data: object) => Promise<unknown> | void;
         patch: (endpoint: string, data: object) => Promise<unknown> | void;
-        put: (endpoint: string, data: object) => Promise<unknown> | void;
-        delete: (endpoint: string, data: object) => Promise<unknown>;
+        put: (endpoint: string, data?: object) => Promise<unknown> | void;
+        delete: (endpoint: string, data?: object) => Promise<unknown>;
     }
 
     class Client{
