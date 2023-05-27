@@ -149,22 +149,7 @@ export default class Cache {
      */
     handleRoleCreate(data) {
         if(this.client.cache.options.guilds !== true || this.client.cache.options.roles !== true) return;
-        const role = {
-            version: data.role.version,
-            unicode_emoji: data.role.unicode_emoji,
-            tags: data.role.tags,
-            position: data.role.position,
-            permissions: data.role.permissions,
-            name: data.role.name,
-            mentionable: data.role.mentionable,
-            managed: data.role.managed,
-            id: data.role.id,
-            icon: data.role.icon,
-            hoist: data.role.hoist,
-            flags: data.role.flags,
-            color: data.role.color
-        };
-        this.client.cache.guilds.get(data.guild_id).roles.set(role.id, role);
+        this.client.cache.guilds.get(data.guild_id).roles.set(data.role.id, data.role);
     };
 
     /**
@@ -172,22 +157,7 @@ export default class Cache {
      */
     handleRoleUpdate(data) {
         if(this.client.cache.options.guilds !== true || this.client.cache.options.roles !== true) return;
-        const role = {
-            version: data.role.version,
-            unicode_emoji: data.role.unicode_emoji,
-            tags: data.role.tags,
-            position: data.role.position,
-            permissions: data.role.permissions,
-            name: data.role.name,
-            mentionable: data.role.mentionable,
-            managed: data.role.managed,
-            id: data.role.id,
-            icon: data.role.icon,
-            hoist: data.role.hoist,
-            flags: data.role.flags,
-            color: data.role.color
-        };
-        this.client.cache.guilds.get(data.guild_id).roles.set(role.id, role);
+        this.client.cache.guilds.get(data.guild_id).roles.set(data.role.id, data.role);
     };
     
     /**
