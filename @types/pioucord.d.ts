@@ -35,20 +35,20 @@ declare module 'pioucord' {
     }
 
     interface WebSocket {
-        on(event: string, listener: (data: unknown) => void): this;
+        on(event: string, listener: (data: {[key: string]: any}) => void): this;
     }
 
     interface UserApi {
-        get: (userId: string) => Promise<unknown> | void;
-        getCurrent: () => Promise<unknown> | void;
-        edit: (body: object) => Promise<unknown> | void;
-        getGuilds: (query: object) => Promise<unknown> | void;
-        getGuildsMember: (guildId: string) => Promise<unknown> | void;
-        leaveGuild: (guildId: string) => Promise<unknown> | void;
-        createDM: (body: object) => Promise<unknown> | void;
-        getConnections: () => Promise<unknown> | void;
-        getApplicationRoleConnection: (applicationId: string) => Promise<unknown> | void;
-        updateApplicationRoleConnection: (applicationId: string, body: object) => Promise<unknown> | void;
+        get: (userId: string) => Promise<{[key: string]: any}> | void;
+        getCurrent: () => Promise<{[key: string]: any}> | void;
+        edit: (body: object) => Promise<{[key: string]: any}> | void;
+        getGuilds: (query: object) => Promise<{[key: string]: any}> | void;
+        getGuildsMember: (guildId: string) => Promise<{[key: string]: any}> | void;
+        leaveGuild: (guildId: string) => Promise<{[key: string]: any}> | void;
+        createDM: (body: object) => Promise<{[key: string]: any}> | void;
+        getConnections: () => Promise<{[key: string]: any}> | void;
+        getApplicationRoleConnection: (applicationId: string) => Promise<{[key: string]: any}> | void;
+        updateApplicationRoleConnection: (applicationId: string, body: object) => Promise<{[key: string]: any}> | void;
     }
     
     interface Guild {
@@ -71,11 +71,11 @@ declare module 'pioucord' {
     class Rest {
         constructor(options: RestOptions);
 
-        get: (endpoint: string) => Promise<unknown>;
-        post: (endpoint: string, data: object) => Promise<unknown> | void;
-        patch: (endpoint: string, data: object) => Promise<unknown> | void;
-        put: (endpoint: string, data: object) => Promise<unknown> | void;
-        delete: (endpoint: string, data: object) => Promise<unknown>;
+        get: (endpoint: string) => Promise<{[key: string]: any}>;
+        post: (endpoint: string, data: object) => Promise<{[key: string]: any}> | void;
+        patch: (endpoint: string, data: object) => Promise<{[key: string]: any}> | void;
+        put: (endpoint: string, data: object) => Promise<{[key: string]: any}> | void;
+        delete: (endpoint: string, data: object) => Promise<{[key: string]: any}>;
     }
 
     class Api {
@@ -105,7 +105,7 @@ declare module 'pioucord' {
 
         cache: Cache;
         api: Api;
-        user: unknown;
+        user: {[key: string]: any};
         startedTimestamp: Date;
         ws: WebSocket;
         rest: Rest;
