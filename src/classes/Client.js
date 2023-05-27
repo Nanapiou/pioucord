@@ -85,7 +85,6 @@ export default class Client {
         this.token = token;
         this.rest.setToken(token);
         if (this.userBot) {
-            this.ws.on()
             const gatewayUser = await this.rest.get(Routes.gateway());
             this.ws.setGatewayOptions(gatewayUser);
         } else {
