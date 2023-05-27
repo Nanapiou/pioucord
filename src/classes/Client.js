@@ -24,14 +24,6 @@ import Cache from "./Cache.js";
  */
 
 /**
- * @typedef RestOptions
- * @property {"Bot" | "Bearer"} [authPrefix=null]
- * @property {string} version
- * @property {string} [baseUrl="https://discord.com/api"]
- * @property {string} [token=null]
- */
-
-/**
  * @typedef CacheOptions
  * @property {boolean} [guilds]
  * @property {boolean} [channels]
@@ -47,8 +39,8 @@ import Cache from "./Cache.js";
  * @property {boolean} [useRecommendedShardCount=false]
  * @property {boolean} [userBot=false]
  * @property {string} [apiVersion="10"]
- * @property {Rest} [api=rest]
- * @property {CacheOptions} [cache]
+ * @property {Api} [api]
+ * @property {Cache} [cache]
  */
 
 export default class Client {

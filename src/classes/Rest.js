@@ -5,7 +5,7 @@ import FormData from 'form-data';
 /**
  * @typedef RestOptions
  * @property {"Bot" | "Bearer"} [authPrefix=null]
- * @property {string} version
+ * @property {string} [version]
  * @property {string} [baseUrl="https://discord.com/api"]
  * @property {string} [token=null]
  */
