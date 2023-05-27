@@ -1,9 +1,5 @@
 import {
-    Routes, 
-    RESTPostAPICurrentUserCreateDMChannelJSONBody, 
-    RESTPutAPICurrentUserApplicationRoleConnectionJSONBody, 
-    RESTGetAPICurrentUserGuildsQuery, 
-    RESTPatchAPICurrentUserJSONBody
+    Routes
 } from 'discord-api-types/v10';
 
 /**
