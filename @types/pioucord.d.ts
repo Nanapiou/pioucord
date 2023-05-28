@@ -115,6 +115,6 @@ declare module 'pioucord' {
         readonly uptime: Date;
         destroy: () => void;
     }
-
+    export * from 'discord-api-types/v10'
     export {Client, ClientOptions, PresenceData, IntentResolvable, Cache, Guild, CacheOptions, Rest, RestOptions, Api, UserApi, WebSocket}
 }
