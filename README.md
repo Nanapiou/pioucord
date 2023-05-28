@@ -160,7 +160,7 @@ for (const file of await readdir(path)) {
 
 // Listening messages
 const prefix = '!';
-client.on('MESSAGE_CREATE', message => {
+client.ws.on('MESSAGE_CREATE', message => {
     if (message.author.bot || !message.content.startsWith(prefix)) return;
 
     const args = message.content.split(/ +/);
