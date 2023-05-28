@@ -1,4 +1,5 @@
 declare module 'pioucord' {
+    import { APIUser, APIGuild, APIChannel, APIRole, APIGuildTextChannel, APITextChannel, RESTAPIPartialCurrentUserGuild, APIGuildMember, APIDMChannel, APIGroupDMChannel, APIConnection } from 'pioucord';
     interface ActivityData {
         name: string,
         type: number
@@ -39,33 +40,21 @@ declare module 'pioucord' {
     }
 
     interface UserApi {
-        get: (userId: string) => Promise<{[key: string]: any}> | void;
-        getCurrent: () => Promise<{[key: string]: any}> | void;
-        edit: (body: object) => Promise<{[key: string]: any}> | void;
-        getGuilds: (query: object) => Promise<{[key: string]: any}> | void;
-        getGuildsMember: (guildId: string) => Promise<{[key: string]: any}> | void;
-        leaveGuild: (guildId: string) => Promise<{[key: string]: any}> | void;
-        createDM: (body: object) => Promise<{[key: string]: any}> | void;
-        getConnections: () => Promise<{[key: string]: any}> | void;
-        getApplicationRoleConnection: (applicationId: string) => Promise<{[key: string]: any}> | void;
-        updateApplicationRoleConnection: (applicationId: string, body: object) => Promise<{[key: string]: any}> | void;
+        get: (userId: string) => Promise<APIUser>;
+        getCurrent: () => Promise<APIUser>;
+        edit: (body: RESTPatchAPICurrentUserJSONBody) => Promise<APIUser>;
+        getGuilds: (query: RESTGetAPICurrentUserGuildsQuery) => Promise<RESTAPIPartialCurrentUserGuild>;
+        getGuildsMember: (guildId: string) => Promise<APIGuildMember>;
+        leaveGuild: (guildId: string) => Promise<{[key: string]: any}>;
+        createDM: (body: RESTPostAPICurrentUserCreateDMChannelJSONBody) => Promise<APIDMChannel | APIGroupDMChannel>;
+        getConnections: () => Promise<APIConnection>;
+        getApplicationRoleConnection: (applicationId: string) => Promise<RESTPutAPICurrentUserApplicationRoleConnectionJSONBody>;
+        updateApplicationRoleConnection: (applicationId: string, body: RESTPutAPICurrentUserApplicationRoleConnectionJSONBody) => Promise<RESTPutAPICurrentUserApplicationRoleConnectionJSONBody>;
     }
     
-    interface Guild {
-        id: string,
-        channels?: Map<string, Channel>,
-        roles?: Map<string, Role>,
-        [key: string]: any
-    }
-
-    interface Channel {
-        id: string,
-        [key: string]: any
-    }
-
-    interface Role {
-        id: string,
-        [key: string]: any
+    interface Guild extends APIGuild {
+        channels?: Map<string, APITextChannel>,
+        roles?: Map<string, APIRole>,
     }
 
     class Rest {
@@ -105,7 +94,7 @@ declare module 'pioucord' {
 
         cache: Cache;
         api: Api;
-        user: {[key: string]: any};
+        user: APIUser;
         startedTimestamp: Date;
         ws: WebSocket;
         rest: Rest;
