@@ -11,9 +11,9 @@ export default class Cache {
      */
     constructor({guilds, channels, roles}) {
         this.options = {
-            guilds: guilds !== true ? false : true,
-            channels: channels !== true ? false : true,
-            roles: roles !== true ? false : true
+            guilds: guilds,
+            channels: channels,
+            roles: roles
         }
         this.guilds = this.options.guilds === true ? new Map() : undefined;
     };
@@ -132,7 +132,6 @@ export default class Cache {
             id: data.id,
             flags: data.flags
         };
-        delete channel["client"];
         this.client.cache.guilds.get(data.guild_id).channels.set(channel.id, channel);
     };
 
