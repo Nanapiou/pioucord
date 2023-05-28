@@ -1,5 +1,5 @@
 declare module 'pioucord' {
-    import { APIUser, APIGuild, APIChannel, APIRole, APIGuildTextChannel, APITextChannel, RESTAPIPartialCurrentUserGuild, APIGuildMember, APIDMChannel, APIGroupDMChannel, APIConnection } from 'pioucord';
+    import { APIUser, APIGuild, APIChannel, APIRole, APIGuildTextChannel, APITextChannel, RESTAPIPartialCurrentUserGuild, APIGuildMember, APIDMChannel, APIGroupDMChannel, APIConnection, RESTGetAPICurrentUserGuildsQuery, RESTPatchAPICurrentUserJSONBody, RESTPostAPICurrentUserCreateDMChannelJSONBody, RESTPutAPICurrentUserApplicationRoleConnectionJSONBody } from 'pioucord';
     interface ActivityData {
         name: string,
         type: number
