@@ -22,7 +22,7 @@ export default class Cache {
      * @param {unknown} data
      */
     handleGuildCreate(data) {
-        if(this.client.cache.options.guilds !== true) return;
+        if(!this.client.cache.options.guilds) return;
         const guild = {
             ...data,
             channels: this.client.cache.options.channels === true ? new Map(data.channels.map(e => [e.id === undefined ? e.user.id : e.id, e])) : undefined,
@@ -39,7 +39,7 @@ export default class Cache {
      * @param {unknown} data
      */
     handleGuildUpdate(data) {
-        if(this.client.cache.options.guilds !== true) return;
+        if(!this.client.cache.options.guilds) return;
         const guild = {
             ...this.client.cache.guilds.get(data.id),
             afk_channel_id: data.afk_channel_id,
@@ -87,7 +87,7 @@ export default class Cache {
      * @param {unknown} data
      */
     handleGuildDelete(data) {
-        if(this.client.cache.options.guilds !== true) return;
+        if(!this.client.cache.options.guilds) return;
         this.client.cache.guilds.delete(data.id);
     };
 
@@ -95,7 +95,7 @@ export default class Cache {
      * @param {unknown} data
      */
     handleChannelCreate(data) {
-        if(this.client.cache.options.guilds !== true || this.client.cache.options.channels !== true) return;
+        if(!this.client.cache.options.guilds || !this.client.cache.options.channels) return;
         const channel = {    
             version: data.version,
             type: data.type,
@@ -117,7 +117,7 @@ export default class Cache {
      * @param {unknown} data
      */
     handleChannelUpdate(data) {
-        if(this.client.cache.options.guilds !== true || this.client.cache.options.channels !== true) return;
+        if(!this.client.cache.options.guilds||!this.client.cache.options.channels) return;
         const channel = {    
             version: data.version,
             type: data.type,
@@ -139,7 +139,7 @@ export default class Cache {
      * @param {unknown} data
      */
     handleChannelDelete(data) {
-        if(this.client.cache.options.guilds !== true || this.client.cache.options.channels !== true) return;
+        if(!this.client.cache.options.guilds || !this.client.cache.options.channels) return;
         this.client.cache.guilds.get(data.guild_id).channels.delete(data.id);
     };
 
@@ -147,7 +147,7 @@ export default class Cache {
      * @param {unknown} data
      */
     handleRoleCreate(data) {
-        if(this.client.cache.options.guilds !== true || this.client.cache.options.roles !== true) return;
+        if(!this.client.cache.options.guilds || !this.client.cache.options.roles) return;
         this.client.cache.guilds.get(data.guild_id).roles.set(data.role.id, data.role);
     };
 
@@ -155,7 +155,7 @@ export default class Cache {
      * @param {unknown} data
      */
     handleRoleUpdate(data) {
-        if(this.client.cache.options.guilds !== true || this.client.cache.options.roles !== true) return;
+        if(!this.client.cache.options.guilds || !this.client.cache.options.roles) return;
         this.client.cache.guilds.get(data.guild_id).roles.set(data.role.id, data.role);
     };
     
@@ -163,7 +163,7 @@ export default class Cache {
      * @param {unknown} data
      */
     handleRoleDelete(data) {
-        if(this.client.cache.options.guilds !== true || this.client.cache.options.roles !== true) return;
+        if(!this.client.cache.options.guilds || !this.client.cache.options.roles) return;
         this.client.cache.guilds.get(data.guild_id).roles.delete(data.role_id);
     };
 };
