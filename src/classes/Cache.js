@@ -15,7 +15,7 @@ export default class Cache {
             channels: channels,
             roles: roles
         }
-        this.guilds = this.options.guilds === true ? new Map() : undefined;
+        this.guilds = this.options.guilds ? new Map() : undefined;
     };
 
     /**
@@ -25,8 +25,8 @@ export default class Cache {
         if(!this.client.cache.options.guilds) return;
         const guild = {
             ...data,
-            channels: this.client.cache.options.channels === true ? new Map(data.channels.map(e => [e.id === undefined ? e.user.id : e.id, e])) : undefined,
-            roles: this.client.cache.options.roles === true ? new Map(data.roles.map(e => [e.id === undefined ? e.user.id : e.id, e])) : undefined,
+            channels: this.client.cache.options.channels ? new Map(data.channels.map(e => [e.id === undefined ? e.user.id : e.id, e])) : undefined,
+            roles: this.client.cache.options.roles ? new Map(data.roles.map(e => [e.id === undefined ? e.user.id : e.id, e])) : undefined,
         }
         delete guild["client"];
         delete guild["stickers"];
