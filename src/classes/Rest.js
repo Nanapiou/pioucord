@@ -183,6 +183,7 @@ export default class Rest {
     /**
      * Make a get request
      * @param {string} endpoint
+     * @param {object} data
      * @returns {Promise<*>}
      */
     get(endpoint) {
@@ -192,6 +193,7 @@ export default class Rest {
     /**
      * Make a delete request
      * @param {string} endpoint
+     * @param {object} data
      * @returns {Promise<*>}
      */
     delete(endpoint) {
