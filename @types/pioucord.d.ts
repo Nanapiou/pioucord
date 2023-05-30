@@ -60,11 +60,11 @@ declare module 'pioucord' {
     class Rest {
         constructor(options: RestOptions);
 
-        get: (endpoint: string) => Promise<{[key: string]: any}>;
-        post: (endpoint: string, data: object) => Promise<{[key: string]: any}> | void;
-        patch: (endpoint: string, data: object) => Promise<{[key: string]: any}> | void;
-        put: (endpoint: string, data: object) => Promise<{[key: string]: any}> | void;
-        delete: (endpoint: string, data: object) => Promise<{[key: string]: any}>;
+        get: (endpoint: string, data: {[key: string]: any}) => Promise<{[key: string]: any}>;
+        post: (endpoint: string, data: {[key: string]: any}) => Promise<{[key: string]: any}> | void;
+        patch: (endpoint: string, data: {[key: string]: any}) => Promise<{[key: string]: any}> | void;
+        put: (endpoint: string, data: {[key: string]: any}) => Promise<{[key: string]: any}> | void;
+        delete: (endpoint: string, data: {[key: string]: any}) => Promise<{[key: string]: any}>;
     }
 
     class Api {
