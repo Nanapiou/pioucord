@@ -5,7 +5,7 @@ import FormData from 'form-data';
 /**
  * @typedef RestOptions
  * @property {"Bot" | "Bearer"} [authPrefix=null]
- * @property {string} version
+ * @property {string} [version]
  * @property {string} [baseUrl="https://discord.com/api"]
  * @property {string} [token=null]
  */
@@ -183,6 +183,7 @@ export default class Rest {
     /**
      * Make a get request
      * @param {string} endpoint
+     * @param {object} data
      * @returns {Promise<*>}
      */
     get(endpoint) {
@@ -192,6 +193,7 @@ export default class Rest {
     /**
      * Make a delete request
      * @param {string} endpoint
+     * @param {object} data
      * @returns {Promise<*>}
      */
     delete(endpoint) {
