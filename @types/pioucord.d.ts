@@ -1,5 +1,5 @@
 declare module 'pioucord' {
-    import { APIUser, APIGuild, APIChannel, APIRole, APIGuildTextChannel, APITextChannel, RESTAPIPartialCurrentUserGuild, APIGuildMember, APIDMChannel, APIGroupDMChannel, APIConnection, RESTGetAPICurrentUserGuildsQuery, RESTPatchAPICurrentUserJSONBody, RESTPostAPICurrentUserCreateDMChannelJSONBody, RESTPutAPICurrentUserApplicationRoleConnectionJSONBody } from 'pioucord';
+    import { APIUser, APIGuild, APIRole, APITextChannel, RESTAPIPartialCurrentUserGuild, APIGuildMember, APIDMChannel, APIGroupDMChannel, APIConnection, RESTGetAPICurrentUserGuildsQuery, RESTPatchAPICurrentUserJSONBody, RESTPostAPICurrentUserCreateDMChannelJSONBody, RESTPutAPICurrentUserApplicationRoleConnectionJSONBody } from 'pioucord';
     interface ActivityData {
         name: string,
         type: number
@@ -60,11 +60,11 @@ declare module 'pioucord' {
     class Rest {
         constructor(options: RestOptions);
 
-        get: (endpoint: string, data: {[key: string]: any}) => Promise<{[key: string]: any}>;
+        get: (endpoint: string, data?: {[key: string]: any}) => Promise<{[key: string]: any}>;
         post: (endpoint: string, data: {[key: string]: any}) => Promise<{[key: string]: any}> | void;
         patch: (endpoint: string, data: {[key: string]: any}) => Promise<{[key: string]: any}> | void;
-        put: (endpoint: string, data: {[key: string]: any}) => Promise<{[key: string]: any}> | void;
-        delete: (endpoint: string, data: {[key: string]: any}) => Promise<{[key: string]: any}>;
+        put: (endpoint: string, data?: {[key: string]: any}) => Promise<{[key: string]: any}> | void;
+        delete: (endpoint: string, data?: {[key: string]: any}) => Promise<{[key: string]: any}>;
     }
 
     class Api {
