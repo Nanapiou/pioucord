@@ -183,7 +183,6 @@ export default class Rest {
     /**
      * Make a get request
      * @param {string} endpoint
-     * @param {object} data
      * @returns {Promise<*>}
      */
     get(endpoint) {
@@ -193,56 +192,59 @@ export default class Rest {
     /**
      * Make a delete request
      * @param {string} endpoint
-     * @param {object} data
+     * @param {string} reason
      * @returns {Promise<*>}
      */
-    delete(endpoint) {
-        return this.request(this.buildFullUrl(endpoint), undefined, this.defaultHeaders, 'DELETE');
+    delete(endpoint, reason) {
+        return this.request(this.buildFullUrl(endpoint), undefined, reason ? {...this.defaultHeaders, 'X-Audit-Log-Reason': encodeURIComponent(reason)} : this.defaultHeaders, 'DELETE');
     };
 
     /**
      * Make a post request
      * @param {string} endpoint
      * @param {object} data
+     * @param {string} reason
      * @returns {Promise<*> | void}
      */
-    post(endpoint, data = {}) {
+    post(endpoint, data = {}, reason) {
         if (data.files?.length > 0) {
             const formData = this.buildFormData(data);
-            const headers = this.defaultHeaders;
+            const headers = reason ? {...this.defaultHeaders, 'X-Audit-Log-Reason': encodeURIComponent(reason)} : this.defaultHeaders;
             delete headers['content-type']; // So form-data can set the content-type
             return this.request(this.buildFullUrl(endpoint), formData, headers, 'POST');
-        } else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'POST');
+        } else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), reason ? {...this.defaultHeaders, 'X-Audit-Log-Reason': encodeURIComponent(reason)} : this.defaultHeaders, 'POST');
     };
 
     /**
      * Make a patch request
      * @param {string} endpoint
      * @param {object} data
+     * @param {string} reason
      * @returns {Promise<*> | void}
      */
-    patch(endpoint, data = {}) {
+    patch(endpoint, data = {}, reason) {
         if (data.files?.length > 0) {
             const formData = this.buildFormData(data);
-            const headers = this.defaultHeaders;
+            const headers = reason ? {...this.defaultHeaders, 'X-Audit-Log-Reason': encodeURIComponent(reason)} : this.defaultHeaders;
             delete headers['content-type']; // So form-data can set the content-type
             return this.request(this.buildFullUrl(endpoint), formData, headers, 'PATCH');
-        } else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'PATCH');
+        } else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), reason ? {...this.defaultHeaders, 'X-Audit-Log-Reason': encodeURIComponent(reason)} : this.defaultHeaders, 'PATCH');
     };
 
     /**
      * Make a put request
      * @param {string} endpoint
      * @param {object} data
+     * @param {string} reason
      * @returns {Promise<*> | void}
      */
-    put(endpoint, data = {}) {
+    put(endpoint, data = {}, reason) {
         if (data.files?.length > 0) {
             const formData = this.buildFormData(data);
-            const headers = this.defaultHeaders;
+            const headers = reason ? {...this.defaultHeaders, 'X-Audit-Log-Reason': encodeURIComponent(reason)} : this.defaultHeaders;
             delete headers['content-type']; // So form-data can set the content-type
             return this.request(this.buildFullUrl(endpoint), formData, headers, 'PUT');
-        } else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), this.defaultHeaders, 'PUT');
+        } else return this.request(this.buildFullUrl(endpoint), JSON.stringify(data), reason ? {...this.defaultHeaders, 'X-Audit-Log-Reason': encodeURIComponent(reason)} : this.defaultHeaders, 'PUT');
     };
 
     /**
