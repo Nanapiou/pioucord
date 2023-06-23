@@ -63,7 +63,7 @@ declare module 'pioucord' {
         get: (endpoint: string, data?: {[key: string]: any}, reason?: string) => Promise<{[key: string]: any}>;
         post: (endpoint: string, data: {[key: string]: any}, reason?: string) => Promise<{[key: string]: any}> | void;
         patch: (endpoint: string, data: {[key: string]: any}, reason?: string) => Promise<{[key: string]: any}> | void;
-        put: (endpoint: string, data?: {[key: string]: any, reason?: string}) => Promise<{[key: string]: any}> | void;
+        put: (endpoint: string, data?: {[key: string]: any}, reason?: string) => Promise<{[key: string]: any}> | void;
         delete: (endpoint: string, data?: {[key: string]: any}, reason?: string) => Promise<{[key: string]: any}>;
     }
 
