@@ -1,6 +1,6 @@
 {
     "name": "pioucord",
-    "version": "1.1.34",
+    "version": "1.1.35",
     "type": "module",
     "description": "A little help to use the discord api.\nHandle connection to the gateway and provide a fast way to make requests to discord.\nThis package is not finished, it is still in development.",
     "main": "src/index.js",
