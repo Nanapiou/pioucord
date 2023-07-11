@@ -98,7 +98,7 @@ declare module 'pioucord' {
         startedTimestamp: Date;
         ws: WebSocket;
         rest: Rest;
-        login: (token: string) => void;
+        login: (token: string) => Promise<APIUser>;
         setPresence: (presenceObject: PresenceData) => void;
         addGuildEvents: (guildId: string) => void;
         readonly uptime: Date;
