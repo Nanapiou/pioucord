@@ -1,10 +1,9 @@
 import WebSocketManager from "./WebSocketManager.js";
 import {GatewayIntentBits, Routes} from "discord-api-types/v10";
-import Api from "./Api.js";
 import Rest from "./Rest.js";
+import {Cache} from "./Cache.js";
 import BitField from "./BitField.js";
 import VoiceManager from "./voice/VoiceManager.js";
-import Cache from "./Cache.js";
 
 /**
  * @typedef {number | string | BitField | IntentResolvable[]} IntentResolvable
@@ -28,6 +27,7 @@ import Cache from "./Cache.js";
  * @property {boolean} [guilds]
  * @property {boolean} [channels]
  * @property {boolean} [roles]
+ * @property {boolean} [users]
  */
 
 /**
@@ -39,15 +39,14 @@ import Cache from "./Cache.js";
  * @property {boolean} [useRecommendedShardCount=false]
  * @property {boolean} [userBot=false]
  * @property {string} [apiVersion="10"]
- * @property {Api} [api]
- * @property {Cache} [cache]
+ * @property {CacheOptions} [cache]
  */
 
 export default class Client {
     /**
      * @param {ClientOptions} clientOptions
      */
-    constructor({ intents, presence, shards, shardsCount, useRecommendedShardCount, userBot, apiVersion, api, cache }) {
+    constructor({ intents, presence, shards, shardsCount, useRecommendedShardCount, userBot, apiVersion, cache }) {
         if (shards?.length > 0 && shardsCount === null && !useRecommendedShardCount) throw new Error("Cannot specify shards without shardsCount");
         if ((shardsCount !== null || useRecommendedShardCount) && shards?.length < 1) throw new Error("If you provide a shardsCount, you must also provide shards");
 
@@ -58,23 +57,12 @@ export default class Client {
         this.userBot = userBot ?? false;
         this.apiVersion = apiVersion ?? "10";
         this.rest = new Rest({ version: this.apiVersion, authPrefix: userBot ? undefined : 'Bot' });
-        this.cache = cache ?? new Cache({});
-        this.api = api ?? new Api(this.rest);
         this.voiceManager = new VoiceManager(this);
         this.ws = new WebSocketManager(this, {
             v: this.apiVersion,
             encoding: 'json'
         });
-        this.ws.setShardsData(shards ?? [], shardsCount ?? null, useRecommendedShardCount);
-        this.ws.on("GUILD_CREATE", this.cache.handleGuildCreate);
-        this.ws.on("GUILD_UPDATE", this.cache.handleGuildUpdate);
-        this.ws.on("GUILD_DELETE", this.cache.handleGuildDelete);
-        this.ws.on("CHANNEL_CREATE", this.cache.handleChannelCreate);
-        this.ws.on("CHANNEL_UPDATE", this.cache.handleChannelUpdate);
-        this.ws.on("CHANNEL_DELETE", this.cache.handleChannelDelete);
-        this.ws.on("GUILD_ROLE_CREATE", this.cache.handleRoleCreate);
-        this.ws.on("GUILD_ROLE_UPDATE", this.cache.handleRoleUpdate);
-        this.ws.on("GUILD_ROLE_DELETE", this.cache.handleRoleDelete);
+        this.cache = new Cache(cache ?? {}, this);
     };
     /**
      * Login the client

@@ -1,169 +1,132 @@
-/**
- * @typedef CacheOptions
- * @property {boolean} [guilds]
- * @property {boolean} [channels]
- * @property {boolean} [roles]
- */
-
-export default class Cache {
+export class Cache {
     /**
+     * A cache class, bound to the client.
      * @param {CacheOptions} options
+     * @param {Client} client
      */
-    constructor({guilds, channels, roles}) {
-        this.options = {
-            guilds: guilds,
-            channels: channels,
-            roles: roles
+    constructor(options, client) {
+        this.options = options;
+        this.client = client;
+
+        if (options.guilds) {
+            this.guilds = new Map();
+            client.ws.on("GUILD_CREATE", this.handleGuildCreate.bind(this));
+            client.ws.on("GUILD_DELETE", this.handleGuildDelete.bind(this));
+            client.ws.on("GUILD_UPDATE", this.handleGuildUpdate.bind(this));
         }
-        this.guilds = this.options.guilds ? new Map() : undefined;
-    };
+        if (options.users) {
+            this.users = new Map();
 
-    /**
-     * @param {unknown} data
-     */
-    handleGuildCreate(data) {
-        if(!this.client.cache.options.guilds) return;
-        const guild = {
-            ...data,
-            channels: this.client.cache.options.channels ? new Map(data.channels.map(e => [e.id === undefined ? e.user.id : e.id, e])) : undefined,
-            roles: this.client.cache.options.roles ? new Map(data.roles.map(e => [e.id === undefined ? e.user.id : e.id, e])) : undefined,
+            client.ws.on("MESSAGE_CREATE", this.handleMessageCreate.bind(this));
+            client.ws.on("MESSAGE_DELETE", this.handleMessageDelete.bind(this));
+            client.ws.on("MESSAGE_UPDATE", this.handleMessageUpdate.bind(this));
+            client.ws.on("GUILD_MEMBER_ADD", this.handleGuildMemberAdd.bind(this));
+            client.ws.on("GUILD_MEMBER_UPDATE", this.handleGuildMemberUpdate.bind(this));
         }
-        delete guild["client"];
-        delete guild["stickers"];
-        delete guild["members"];
-        delete guild["emojis"];
-        this.client.cache.guilds.set(guild.id, guild);
-    };
-
-    /**
-     * @param {unknown} data
-     */
-    handleGuildUpdate(data) {
-        if(!this.client.cache.options.guilds) return;
-        const guild = {
-            ...this.client.cache.guilds.get(data.id),
-            afk_channel_id: data.afk_channel_id,
-            max_members: data.max_members,
-            system_channel_id: data.system_channel_id,
-            mfa_level: data.mfa_level,
-            vanity_url_code: data.vanity_url_code,
-            discovery_splash: data.discovery_splash,
-            public_updates_channel_id: data.public_updates_channel_id,
-            max_stage_video_channel_users: data.max_stage_video_channel_users,
-            description: data.description,
-            nsfw: data.nsfw,
-            premium_tier: data.premium_tier,
-            nsfw_level: data.nsfw_level,
-            max_video_channel_users: data.max_video_channel_users,
-            id: data.id,
-            preferred_locale: data.preferred_locale,
-            home_header: data.home_header,
-            safety_alerts_channel_id: data.safety_alerts_channel_id,
-            default_message_notifications: data.default_message_notifications,
-            hub_type: data.hub_type,
-            region: data.region,
-            system_channel_flags: data.system_channel_flags,
-            verification_level: data.verification_level,
-            application_id: data.application_id,
-            premium_progress_bar_enabled: data.premium_progress_bar_enabled,
-            banner: data.banner,
-            latest_onboarding_question_id: data.latest_onboarding_question_id,
-            afk_timeout: data.afk_timeout,
-            owner_id: data.owner_id,
-            icon: data.icon,
-            incidents_data: data.incidents_data,
-            embedded_activities: data.embedded_activities,
-            splash: data.splash,
-            name: data.name,
-            rules_channel_id: data.rules_channel_id,
-            explicit_content_filter: data.explicit_content_filter,
-            premium_subscription_count: data.premium_subscription_count,
-            shardId: data.shardId
+        if (options.channels) {
+            this.channels = new Map();
+            client.ws.on("CHANNEL_CREATE", this.handleChannelCreate.bind(this));
+            client.ws.on("CHANNEL_DELETE", this.handleChannelDelete.bind(this));
+            client.ws.on("CHANNEL_UPDATE", this.handleChannelUpdate.bind(this));
+            client.ws.on("THREAD_CREATE", this.handleThreadCreate.bind(this));
+            client.ws.on("THREAD_DELETE", this.handleThreadDelete.bind(this));
+            client.ws.on("THREAD_UPDATE", this.handleThreadUpdate.bind(this));
+            if (!options.guilds) {
+                client.ws.on("GUILD_ROLE_CREATE", this.handleGuildRoleCreate.bind(this));
+                client.ws.on("GUILD_ROLE_DELETE", this.handleGuildRoleDelete.bind(this));
+                client.ws.on("GUILD_ROLE_UPDATE", this.handleGuildRoleUpdate.bind(this));
+            }
         }
-        this.client.cache.guilds.set(guild.id, guild);
-    };
-    
-    /**
-     * @param {unknown} data
-     */
-    handleGuildDelete(data) {
-        if(!this.client.cache.options.guilds) return;
-        this.client.cache.guilds.delete(data.id);
-    };
+        if (options.roles) {
+            this.roles = new Map();
+            client.ws.on("GUILD_ROLE_CREATE", this.handleGuildRoleCreate.bind(this));
+            client.ws.on("GUILD_ROLE_DELETE", this.handleGuildRoleDelete.bind(this));
+            client.ws.on("GUILD_ROLE_UPDATE", this.handleGuildRoleUpdate.bind(this));
+            if (!(options.channels || options.guilds)) {
+                client.ws.on("GUILD_CREATE", this.handleGuildCreate.bind(this));
+                client.ws.on("GUILD_DELETE", this.handleGuildDelete.bind(this));
+                client.ws.on("GUILD_UPDATE", this.handleGuildUpdate.bind(this));
+            }
+        }
+    }
 
-    /**
-     * @param {unknown} data
-     */
-    handleChannelCreate(data) {
-        if(!this.client.cache.options.guilds || !this.client.cache.options.channels) return;
-        const channel = {    
-            version: data.version,
-            type: data.type,
-            topic: data.topic,
-            rate_limit_per_user: data.rate_limit_per_user,
-            position: data.position,
-            permission_overwrites: data.permission_overwrites,
-            parent_id: data.parent_id,
-            nsfw: data.nsfw,
-            name: data.name,
-            last_message_id: data.last_message_id,
-            id: data.id,
-            flags: data.flags
-        };
-        this.client.cache.guilds.get(data.guild_id).channels.set(channel.id, channel);
-    };
+    handleGuildCreate(guild) {
+        if (this.options.guilds) this.guilds.set(guild.id, guild);
+        if (this.options.channels) for (const channel of guild.channels) {
+            this.channels.set(channel.id, channel);
+        }
+        if (this.options.roles) for (const role of guild.roles) {
+            this.roles.set(role.id, role);
+        }
+    }
 
-    /**
-     * @param {unknown} data
-     */
-    handleChannelUpdate(data) {
-        if(!this.client.cache.options.guilds||!this.client.cache.options.channels) return;
-        const channel = {    
-            version: data.version,
-            type: data.type,
-            topic: data.topic,
-            rate_limit_per_user: data.rate_limit_per_user,
-            position: data.position,
-            permission_overwrites: data.permission_overwrites,
-            parent_id: data.parent_id,
-            nsfw: data.nsfw,
-            name: data.name,
-            last_message_id: data.last_message_id,
-            id: data.id,
-            flags: data.flags
-        };
-        this.client.cache.guilds.get(data.guild_id).channels.set(channel.id, channel);
-    };
+    handleGuildDelete(guild) {
+        if (this.options.guilds) this.guilds.delete(guild.id);
+        if (this.options.channels) for (const channel of guild.channels) {
+            this.channels.delete(channel.id);
+        }
+        if (this.options.roles) for (const role of guild.roles) {
+            this.roles.delete(role.id);
+        }
+    }
 
-    /**
-     * @param {unknown} data
-     */
-    handleChannelDelete(data) {
-        if(!this.client.cache.options.guilds || !this.client.cache.options.channels) return;
-        this.client.cache.guilds.get(data.guild_id).channels.delete(data.id);
-    };
+    handleGuildUpdate(guild) {
+        this.guilds.set(guild.id, guild);
+    }
 
-    /**
-     * @param {unknown} data
-     */
-    handleRoleCreate(data) {
-        if(!this.client.cache.options.guilds || !this.client.cache.options.roles) return;
-        this.client.cache.guilds.get(data.guild_id).roles.set(data.role.id, data.role);
-    };
+    handleChannelCreate(channel) {
+        this.channels.set(channel.id, channel);
+    }
 
-    /**
-     * @param {unknown} data
-     */
-    handleRoleUpdate(data) {
-        if(!this.client.cache.options.guilds || !this.client.cache.options.roles) return;
-        this.client.cache.guilds.get(data.guild_id).roles.set(data.role.id, data.role);
-    };
-    
-    /**
-     * @param {unknown} data
-     */
-    handleRoleDelete(data) {
-        if(!this.client.cache.options.guilds || !this.client.cache.options.roles) return;
-        this.client.cache.guilds.get(data.guild_id).roles.delete(data.role_id);
-    };
-};
+    handleChannelDelete(channel) {
+        this.channels.delete(channel.id);
+    }
+
+    handleChannelUpdate(channel) {
+        this.channels.set(channel.id, channel);
+    }
+
+    handleGuildRoleCreate(role) {
+        this.roles.set(role.id, role);
+    }
+
+    handleGuildRoleDelete(role) {
+        this.roles.delete(role.id);
+    }
+
+    handleGuildRoleUpdate(role) {
+        this.roles.set(role.id, role);
+    }
+
+    handleMessageCreate(message) {
+        this.users.set(message.author.id, message.author);
+    }
+
+    handleMessageDelete(message) {
+        this.users.set(message.author.id, message.author);
+    }
+
+    handleMessageUpdate(message) {
+        this.users.set(message.author.id, message.author);
+    }
+
+    handleThreadCreate(thread) {
+        this.channels.set(thread.id, thread);
+    }
+
+    handleThreadDelete(thread) {
+        this.channels.delete(thread.id);
+    }
+
+    handleThreadUpdate(thread) {
+        this.channels.set(thread.id, thread);
+    }
+
+    handleGuildMemberAdd(member) {
+        this.users.set(member.id, member.user);
+    }
+
+    handleGuildMemberUpdate(member) {
+        this.users.set(member.id, member.user);
+    }
+}
