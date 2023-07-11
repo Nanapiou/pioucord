@@ -1,5 +1,5 @@
 declare module 'pioucord' {
-    import { APIUser } from 'pioucord';
+    import {APIChannel, APIGuild, APIRole, APIUser} from "discord-api-types/v10";
     interface ActivityData {
         name: string,
         type: number
@@ -29,8 +29,23 @@ declare module 'pioucord' {
         api?: RestOptions;
     }
 
+    interface CacheOptions {
+        guilds?: boolean;
+        channels?: boolean;
+        users?: boolean;
+        roles?: boolean;
+    }
+
     interface WebSocket {
         on(event: string, listener: (data: {[key: string]: any}) => void): this;
+    }
+
+    class Cache {
+        constructor(options: CacheOptions, client: Client);
+        guilds: Map<string, APIGuild>;
+        channels: Map<string, APIChannel>;
+        users: Map<string, APIUser>;
+        roles: Map<string, APIRole>;
     }
 
     class Rest {
@@ -56,5 +71,5 @@ declare module 'pioucord' {
         destroy: () => void;
     }
     export * from 'discord-api-types/v10'
-    export {Client, ClientOptions, PresenceData, IntentResolvable, Rest, RestOptions, WebSocket}
+    export {Client, ClientOptions, PresenceData, IntentResolvable, Rest, RestOptions, WebSocket, Cache, CacheOptions}
 }

@@ -26,6 +26,7 @@ import VoiceManager from "./voice/VoiceManager.js";
  * @property {boolean} [guilds]
  * @property {boolean} [channels]
  * @property {boolean} [roles]
+ * @property {boolean} [users]
  */
 
 /**
@@ -37,13 +38,14 @@ import VoiceManager from "./voice/VoiceManager.js";
  * @property {boolean} [useRecommendedShardCount=false]
  * @property {boolean} [userBot=false]
  * @property {string} [apiVersion="10"]
+ * @property {CacheOptions} [cache]
  */
 
 export default class Client {
     /**
      * @param {ClientOptions} clientOptions
      */
-    constructor({ intents, presence, shards, shardsCount, useRecommendedShardCount, userBot, apiVersion }) {
+    constructor({ intents, presence, shards, shardsCount, useRecommendedShardCount, userBot, apiVersion, cache }) {
         if (shards?.length > 0 && shardsCount === null && !useRecommendedShardCount) throw new Error("Cannot specify shards without shardsCount");
         if ((shardsCount !== null || useRecommendedShardCount) && shards?.length < 1) throw new Error("If you provide a shardsCount, you must also provide shards");
 
