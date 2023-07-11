@@ -51,11 +51,6 @@ declare module 'pioucord' {
         getApplicationRoleConnection: (applicationId: string) => Promise<RESTPutAPICurrentUserApplicationRoleConnectionJSONBody>;
         updateApplicationRoleConnection: (applicationId: string, body: RESTPutAPICurrentUserApplicationRoleConnectionJSONBody) => Promise<RESTPutAPICurrentUserApplicationRoleConnectionJSONBody>;
     }
-    
-    interface Guild extends APIGuild {
-        channels?: Map<string, APITextChannel>,
-        roles?: Map<string, APIRole>,
-    }
 
     class Rest {
         constructor(options: RestOptions);
@@ -73,12 +68,6 @@ declare module 'pioucord' {
         user: UserApi;
     }
 
-    class Cache {
-        constructor(options: CacheOptions);
-
-        guilds: Map<string, Guild>;
-    }
-
     class Client {
         constructor(options: {
             intents: IntentResolvable;
@@ -91,8 +80,6 @@ declare module 'pioucord' {
             api?: Api;
             cache?: Cache;
         });
-
-        cache: Cache;
         api: Api;
         user: APIUser;
         startedTimestamp: Date;
@@ -105,5 +92,5 @@ declare module 'pioucord' {
         destroy: () => void;
     }
     export * from 'discord-api-types/v10'
-    export {Client, ClientOptions, PresenceData, IntentResolvable, Cache, Guild, CacheOptions, Rest, RestOptions, Api, UserApi, WebSocket}
+    export {Client, ClientOptions, PresenceData, IntentResolvable, CacheOptions, Rest, RestOptions, Api, UserApi, WebSocket}
 }
