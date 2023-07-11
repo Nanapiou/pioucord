@@ -1,6 +1,7 @@
 import WebSocketManager from "./WebSocketManager.js";
 import {GatewayIntentBits, Routes} from "discord-api-types/v10";
 import Rest from "./Rest.js";
+import {Cache} from "./Cache.js";
 import BitField from "./BitField.js";
 import VoiceManager from "./voice/VoiceManager.js";
 
@@ -61,6 +62,7 @@ export default class Client {
             v: this.apiVersion,
             encoding: 'json'
         });
+        this.cache = new Cache(cache ?? {}, this);
     };
     /**
      * Login the client

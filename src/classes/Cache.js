@@ -51,21 +51,21 @@ export class Cache {
     }
 
     handleGuildCreate(guild) {
-        this.guilds.set(guild.id, guild);
-        for (const channel of guild.channels) {
+        if (this.options.guilds) this.guilds.set(guild.id, guild);
+        if (this.options.channels) for (const channel of guild.channels) {
             this.channels.set(channel.id, channel);
         }
-        for (const role of guild.roles) {
+        if (this.options.roles) for (const role of guild.roles) {
             this.roles.set(role.id, role);
         }
     }
 
     handleGuildDelete(guild) {
-        this.guilds.delete(guild.id);
-        for (const channel of guild.channels) {
+        if (this.options.guilds) this.guilds.delete(guild.id);
+        if (this.options.channels) for (const channel of guild.channels) {
             this.channels.delete(channel.id);
         }
-        for (const role of guild.roles) {
+        if (this.options.roles) for (const role of guild.roles) {
             this.roles.delete(role.id);
         }
     }
