@@ -1,5 +1,5 @@
 declare module 'pioucord' {
-    import { APIUser, APIGuild, APIRole, APITextChannel, RESTAPIPartialCurrentUserGuild, APIGuildMember, APIDMChannel, APIGroupDMChannel, APIConnection, RESTGetAPICurrentUserGuildsQuery, RESTPatchAPICurrentUserJSONBody, RESTPostAPICurrentUserCreateDMChannelJSONBody, RESTPutAPICurrentUserApplicationRoleConnectionJSONBody } from 'pioucord';
+    import { APIUser } from 'pioucord';
     interface ActivityData {
         name: string,
         type: number
@@ -16,7 +16,7 @@ declare module 'pioucord' {
         token?: string
     }
 
-    type IntentResolvable = string[] | number
+    type IntentResolvable = string | number | bigint | IntentResolvable[];
 
     interface ClientOptions {
         intents?: IntentResolvable;
@@ -29,27 +29,8 @@ declare module 'pioucord' {
         api?: RestOptions;
     }
 
-    interface CacheOptions {
-        guilds?: boolean;
-        channels?: boolean;
-        roles?: boolean;
-    }
-
     interface WebSocket {
         on(event: string, listener: (data: {[key: string]: any}) => void): this;
-    }
-
-    interface UserApi {
-        get: (userId: string) => Promise<APIUser>;
-        getCurrent: () => Promise<APIUser>;
-        edit: (body: RESTPatchAPICurrentUserJSONBody) => Promise<APIUser>;
-        getGuilds: (query: RESTGetAPICurrentUserGuildsQuery) => Promise<RESTAPIPartialCurrentUserGuild>;
-        getGuildsMember: (guildId: string) => Promise<APIGuildMember>;
-        leaveGuild: (guildId: string) => Promise<{[key: string]: any}>;
-        createDM: (body: RESTPostAPICurrentUserCreateDMChannelJSONBody) => Promise<APIDMChannel | APIGroupDMChannel>;
-        getConnections: () => Promise<APIConnection>;
-        getApplicationRoleConnection: (applicationId: string) => Promise<RESTPutAPICurrentUserApplicationRoleConnectionJSONBody>;
-        updateApplicationRoleConnection: (applicationId: string, body: RESTPutAPICurrentUserApplicationRoleConnectionJSONBody) => Promise<RESTPutAPICurrentUserApplicationRoleConnectionJSONBody>;
     }
 
     class Rest {
@@ -62,35 +43,18 @@ declare module 'pioucord' {
         delete: (endpoint: string, data?: {[key: string]: any}, reason?: string) => Promise<{[key: string]: any}>;
     }
 
-    class Api {
-        constructor(rest: Rest);
-
-        user: UserApi;
-    }
-
     class Client {
-        constructor(options: {
-            intents: IntentResolvable;
-            presence?: PresenceData;
-            shards?: number[];
-            shardsCount?: number;
-            useRecommendedShardCount?: boolean;
-            userBot?: boolean;
-            apiVersion?: string;
-            api?: Api;
-            cache?: Cache;
-        });
-        api: Api;
+        constructor(options: ClientOptions);
         user: APIUser;
-        startedTimestamp: Date;
+        startedTimestamp: number | null;
         ws: WebSocket;
         rest: Rest;
         login: (token: string) => Promise<APIUser>;
         setPresence: (presenceObject: PresenceData) => void;
         addGuildEvents: (guildId: string) => void;
-        readonly uptime: Date;
+        readonly uptime: number | null;
         destroy: () => void;
     }
     export * from 'discord-api-types/v10'
-    export {Client, ClientOptions, PresenceData, IntentResolvable, CacheOptions, Rest, RestOptions, Api, UserApi, WebSocket}
+    export {Client, ClientOptions, PresenceData, IntentResolvable, Rest, RestOptions, WebSocket}
 }
