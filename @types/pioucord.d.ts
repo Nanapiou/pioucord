@@ -1,14 +1,19 @@
 declare module 'pioucord' {
-    import {APIChannel, APIGuild, APIRole, APIUser} from "discord-api-types/v10";
+    import {APIChannel, APIGuild, APIGuildMember, APIRole, APIUser} from "discord-api-types/v10";
+    import FormData from "form-data";
+
     interface ActivityData {
         name: string,
-        type: number
+        type: number,
+        url?: string,
     }
+
     interface PresenceData {
         status?: "online" | "dnd" | "invisible" | "idle";
         afk?: boolean;
-        activities?: ActivityData[] ;
+        activities?: ActivityData[];
     }
+
     interface RestOptions {
         authPrefix?: "Bot" | "Bearer";
         version?: string
@@ -36,12 +41,9 @@ declare module 'pioucord' {
         roles?: boolean;
     }
 
-    interface WebSocket {
-        on(event: string, listener: (data: {[key: string]: any}) => void): this;
-    }
-
     class Cache {
         constructor(options: CacheOptions, client: Client);
+
         guilds: Map<string, APIGuild>;
         channels: Map<string, APIChannel>;
         users: Map<string, APIUser>;
@@ -51,18 +53,100 @@ declare module 'pioucord' {
     class Rest {
         constructor(options: RestOptions);
 
-        get: (endpoint: string, data?: {[key: string]: any}, reason?: string) => Promise<{[key: string]: any}>;
-        post: (endpoint: string, data: {[key: string]: any}, reason?: string) => Promise<{[key: string]: any}> | void;
-        patch: (endpoint: string, data: {[key: string]: any}, reason?: string) => Promise<{[key: string]: any}> | void;
-        put: (endpoint: string, data?: {[key: string]: any}, reason?: string) => Promise<{[key: string]: any}> | void;
-        delete: (endpoint: string, data?: {[key: string]: any}, reason?: string) => Promise<{[key: string]: any}>;
+        setToken: (token: string) => void;
+        defaultHeaders: { [key: string]: string };
+        resolvedToken: string | null;
+        request: (url: string, body: string | FormData, headers: {
+            [key: string]: string
+        }, method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE" | "HEAD") => Promise<any>;
+        extractEndpoint: (endpoint: string) => string | null;
+        buildFormData: (data: { [key: string]: any }) => FormData;
+
+        get: (endpoint: string, data?: { [key: string]: any }, reason?: string) => Promise<{ [key: string]: any }>;
+        post: (endpoint: string, data: { [key: string]: any }, reason?: string) => Promise<{
+            [key: string]: any
+        }> | void;
+        patch: (endpoint: string, data: { [key: string]: any }, reason?: string) => Promise<{
+            [key: string]: any
+        }> | void;
+        put: (endpoint: string, data?: { [key: string]: any }, reason?: string) => Promise<{
+            [key: string]: any
+        }> | void;
+        delete: (endpoint: string, data?: { [key: string]: any }, reason?: string) => Promise<{ [key: string]: any }>;
+    }
+
+    class WebSocketShard {
+        constructor(manager: WebSocketManager, gatewayUrl: string, shardId?: number | null);
+
+        setupWs: (url?: string) => void;
+        handleMessage: (data: { op: number, s: number, t?: string, d?: { [key: string]: any } }) => void;
+        handleEvent: (name: string, data: { [key: string]: any }) => void;
+        sendPayload: (payload: { op: number, d?: any }) => unknown;
+        heartbeat: () => void;
+        zombied: () => void;
+        identify: (options?: {
+            token: string,
+            intents: number,
+            properties: {
+                os: string,
+                browser: string,
+                device: string
+            },
+            shard?: number[],
+            largeThreshold?: number,
+            compress?: boolean,
+            presence?: PresenceData
+        }) => unknown;
+        resume: () => unknown;
+        setPresence: (presenceObject: PresenceData) => void;
+        requestGuildMembers: (options: {
+            guildId: string,
+            query?: string,
+            limit?: number,
+            presences?: boolean,
+            userIds?: string[]
+        }) => Promise<APIGuildMember[]>;
+        addGuildEvents: (guildId: string) => unknown;
+        destroy: () => void;
+    }
+
+    class WebSocketManager {
+        constructor(client: Client, gatewayParams: { v: string, encoding: string, compress?: string });
+
+        createShard: (shardId: number) => Promise<void | APIUser>;
+        startShards: () => Promise<void | APIUser>;
+        setBotGatewayOptions: (options: {
+            url: string,
+            shards: number,
+            sessionStartLimit: {
+                total: number,
+                remaining: number,
+                reset_after: number,
+                max_concurrency: number
+            }
+        }) => void;
+        setGatewayOptions: (options: { url: string }) => void;
+        setShardsData: (shardsIds: number[], shardsCount: number, useRecommendedShardCount: boolean) => void;
+        requestGuildMembers: (options: {
+            guildId: string,
+            query?: string,
+            limit?: number,
+            presences?: boolean,
+            userIds?: string[]
+        }) => Promise<APIGuildMember[]>
+        forGuild: (guildId: string) => WebSocketShard;
+        destroy: () => void;
+
+        readonly ping: number;
+        readonly shardsCount: number;
     }
 
     class Client {
         constructor(options: ClientOptions);
+
         user: APIUser;
         startedTimestamp: number | null;
-        ws: WebSocket;
+        ws: WebSocketManager;
         rest: Rest;
         login: (token: string) => Promise<APIUser>;
         setPresence: (presenceObject: PresenceData) => void;
@@ -70,6 +154,7 @@ declare module 'pioucord' {
         readonly uptime: number | null;
         destroy: () => void;
     }
+
     export * from 'discord-api-types/v10'
-    export {Client, ClientOptions, PresenceData, IntentResolvable, Rest, RestOptions, WebSocket, Cache, CacheOptions}
+    export {Client, ClientOptions, PresenceData, IntentResolvable, Rest, RestOptions, Cache, CacheOptions}
 }

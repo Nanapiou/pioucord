@@ -45,10 +45,10 @@ export default class Rest {
 
     /**
      * The token, including the prefix
-     * @returns {string}
+     * @returns {string | null}
      */
     get resolvedToken() {
-        return (this.authPrefix ? this.authPrefix + ' ' : '') + this.token;
+        return this.token ? (this.authPrefix ? this.authPrefix + ' ' : '') + this.token : null;
     };
 
     /**

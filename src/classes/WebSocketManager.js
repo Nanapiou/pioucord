@@ -107,7 +107,11 @@ export default class WebSocketManager extends EventEmitter {
     requestGuildMembers({guildId, query, limit, presences, userIds}){
         return this.forGuild(guildId).requestGuildMembers({guildId, query, limit, presences, userIds});
     };
-    
+
+    /**
+     * Get the shard count
+     * @returns {number}
+     */
     get shardsCount() {
         if (this.useRecommendedShardCount) return this.recommendedShardsCount;
         else return this._shardCount;
