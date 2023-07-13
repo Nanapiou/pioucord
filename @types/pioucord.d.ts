@@ -52,7 +52,7 @@ declare module 'pioucord' {
     class Rest {
         constructor(options: RestOptions);
 
-        setToken: (token: string) => void;
+        setToken: (token: string) => this;
         defaultHeaders: { [key: string]: string };
         resolvedToken: string | null;
         request: (url: string, body: string | object, headers: {
