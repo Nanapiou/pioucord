@@ -1,6 +1,5 @@
 declare module 'pioucord' {
     import {APIChannel, APIGuild, APIGuildMember, APIRole, APIUser} from "discord-api-types/v10";
-    import FormData from "form-data";
 
     interface ActivityData {
         name: string,
@@ -56,11 +55,11 @@ declare module 'pioucord' {
         setToken: (token: string) => void;
         defaultHeaders: { [key: string]: string };
         resolvedToken: string | null;
-        request: (url: string, body: string | FormData, headers: {
+        request: (url: string, body: string | object, headers: {
             [key: string]: string
         }, method?: "GET" | "POST" | "PATCH" | "PUT" | "DELETE" | "HEAD") => Promise<any>;
         extractEndpoint: (endpoint: string) => string | null;
-        buildFormData: (data: { [key: string]: any }) => FormData;
+        buildFormData: (data: { [key: string]: any }) => any; // form-data typing is broken
 
         get: (endpoint: string, data?: { [key: string]: any }, reason?: string) => Promise<{ [key: string]: any }>;
         post: (endpoint: string, data: { [key: string]: any }, reason?: string) => Promise<{
