@@ -1,5 +1,6 @@
 declare module 'pioucord' {
-    import {APIChannel, APIGuild, APIGuildMember, APIRole, APIUser} from "discord-api-types/v10";
+    import {APIApplication, APIChannel, APIGuild, APIGuildMember, APIRole, APIUser} from "discord-api-types/v10";
+    import EventEmitter from "events";
 
     interface ActivityData {
         name: string,
@@ -109,7 +110,7 @@ declare module 'pioucord' {
         destroy: () => void;
     }
 
-    class WebSocketManager {
+    class WebSocketManager extends EventEmitter {
         constructor(client: Client, gatewayParams: { v: string, encoding: string, compress?: string });
 
         createShard: (shardId: number) => Promise<void | APIUser>;
@@ -144,6 +145,7 @@ declare module 'pioucord' {
         constructor(options: ClientOptions);
 
         user: APIUser;
+        application: APIApplication;
         startedTimestamp: number | null;
         ws: WebSocketManager;
         rest: Rest;

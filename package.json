@@ -14,6 +14,7 @@
         "url": "https://github.com/Nanapiou/pioucord.git"
     },
     "dependencies": {
+        "@types/node": "^20.4.5",
         "discord-api-types": "^0.37.41",
         "form-data": "^4.0.0",
         "node-fetch": "^2.6.9",
