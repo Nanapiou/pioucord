@@ -1,21 +1,7 @@
 import Websocket from 'ws';
 import {GatewayOPCodes} from "discord-api-types/v6";
-import {GatewayCloseCodes, PresenceUpdateStatus} from "discord-api-types/v10";
+import {GatewayCloseCodes, PresenceUpdateStatus, GatewayIdentifyData} from "discord-api-types/v10";
 import {stringify} from 'node:querystring';
-
-/**
- * @typedef IdentifyOptions
- * @property {string} token
- * @property {number} intents
- * @property {object} properties
- * @property {string} properties.os
- * @property {string} properties.browser
- * @property {string} properties.device
- * @property {number[]} [shard]
- * @property {number} [largeThreshold=50]
- * @property {boolean} [compress=false]
- * @property {PresenceData} [presence]
- */
 
 
 export default class WebSocketShard {
@@ -38,7 +24,7 @@ export default class WebSocketShard {
         this.heartbeatIntervalId = null;
         this.sessionId = null;
         /**
-         * @type {IdentifyOptions}
+         * @type {GatewayIdentifyData}
          */
         this.sessionOptions = {};
 
@@ -223,7 +209,7 @@ export default class WebSocketShard {
 
     /**
      * Identify to the gateway, using the client token
-     * @param {IdentifyOptions} options
+     * @param {GatewayIdentifyData} options
      * @returns {*}
      */
     identify(options = this.sessionOptions) {

@@ -63,7 +63,8 @@ declare module 'pioucord' {
         GatewayUserUpdateDispatchData,
         GatewayVoiceServerUpdateDispatchData,
         GatewayVoiceStateUpdateDispatchData,
-        GatewayIntentBits
+        GatewayIntentBits,
+        GatewayIdentifyData
     } from "discord-api-types/v10";
     import EventEmitter from "events";
 
@@ -137,19 +138,7 @@ declare module 'pioucord' {
         sendPayload: (payload: { op: number, d?: any }) => unknown;
         heartbeat: () => void;
         zombied: () => void;
-        identify: (options?: {
-            token: string,
-            intents: number,
-            properties: {
-                os: string,
-                browser: string,
-                device: string
-            },
-            shard?: number[],
-            largeThreshold?: number,
-            compress?: boolean,
-            presence?: GatewayPresenceUpdateData
-        }) => unknown;
+        identify: (options?: GatewayIdentifyData) => unknown;
         resume: () => unknown;
         setPresence: (presenceObject: GatewayPresenceUpdateData) => void;
         requestGuildMembers: (options: {
