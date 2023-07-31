@@ -1,5 +1,69 @@
 declare module 'pioucord' {
-    import {APIApplication, APIChannel, APIGuild, APIGuildMember, APIRole, APIUser} from "discord-api-types/v10";
+    import {
+    APIApplication,
+    APIChannel,
+    APIGuild,
+    APIGuildMember,
+    APIRole,
+    APIUser,
+    GatewayReadyDispatchData,
+    GatewayGuildCreateDispatchData,
+    GatewayGuildDeleteDispatchData,
+    GatewayGuildUpdateDispatchData,
+    GatewayGuildRoleCreateDispatchData,
+    GatewayGuildRoleUpdateDispatchData,
+    GatewayGuildRoleDeleteDispatchData,
+    GatewayChannelCreateDispatchData,
+    GatewayChannelUpdateDispatchData,
+    GatewayChannelDeleteDispatchData,
+    GatewayChannelPinsUpdateDispatchData,
+    GatewayThreadCreateDispatchData,
+    GatewayThreadUpdateDispatchData,
+    GatewayThreadDeleteDispatchData,
+    GatewayThreadListSyncDispatchData,
+    GatewayThreadMemberUpdateDispatchData,
+    GatewayThreadMembersUpdateDispatchData,
+    GatewayStageInstanceCreateDispatchData,
+    GatewayStageInstanceUpdateDispatchData,
+    GatewayStageInstanceDeleteDispatchData,
+    GatewayGuildMemberAddDispatchData,
+    GatewayGuildMemberUpdateDispatchData,
+    GatewayGuildMemberRemoveDispatchData,
+    GatewayGuildAuditLogEntryCreateDispatchData,
+    GatewayGuildBanAddDispatchData,
+    GatewayGuildBanRemoveDispatchData,
+    GatewayGuildEmojisUpdateDispatchData,
+    GatewayGuildStickersUpdateDispatchData,
+    GatewayGuildIntegrationsUpdateDispatchData,
+    GatewayIntegrationCreateDispatchData,
+    GatewayIntegrationUpdateDispatchData,
+    GatewayIntegrationDeleteDispatchData,
+    GatewayWebhooksUpdateDispatchData,
+    GatewayInviteCreateDispatchData,
+    GatewayInviteDeleteDispatchData,
+    GatewayPresenceUpdateData,
+    GatewayMessageCreateDispatchData,
+    GatewayMessageUpdateDispatchData,
+    GatewayMessageDeleteDispatchData,
+    GatewayMessageDeleteBulkDispatchData,
+    GatewayMessageReactionAddDispatchData,
+    GatewayMessageReactionRemoveDispatchData,
+    GatewayMessageReactionRemoveAllDispatchData,
+    GatewayMessageReactionRemoveEmojiDispatchData,
+    GatewayTypingStartDispatchData,
+    GatewayGuildScheduledEventCreateDispatchData,
+    GatewayGuildScheduledEventUpdateDispatchData,
+    GatewayGuildScheduledEventDeleteDispatchData,
+    GatewayGuildScheduledEventUserAddDispatchData,
+    GatewayGuildScheduledEventUserRemoveDispatchData,
+    GatewayAutoModerationRuleCreateDispatchData,
+    GatewayAutoModerationRuleUpdateDispatchData,
+    GatewayAutoModerationRuleDeleteDispatchData,
+    GatewayAutoModerationActionExecutionDispatchData,
+    GatewayUserUpdateDispatchData,
+    GatewayVoiceServerUpdateDispatchData,
+    GatewayVoiceStateUpdateDispatchData
+} from "discord-api-types/v10";
     import EventEmitter from "events";
 
     interface ActivityData {
@@ -139,6 +203,66 @@ declare module 'pioucord' {
 
         readonly ping: number;
         readonly shardsCount: number;
+
+        on(event: "READY", listener: (data: GatewayReadyDispatchData) => void): this;
+        on(event: "GUILD_CREATE", listener: (data: GatewayGuildCreateDispatchData) => void): this;
+        on(event: "GUILD_UPDATE", listener: (data: GatewayGuildUpdateDispatchData) => void): this;
+        on(event: "GUILD_DELETE", listener: (data: GatewayGuildDeleteDispatchData) => void): this;
+        on(event: "GUILD_ROLE_CREATE", listener: (data: GatewayGuildRoleCreateDispatchData) => void): this;
+        on(event: "GUILD_ROLE_UPDATE", listener: (data: GatewayGuildRoleUpdateDispatchData) => void): this;
+        on(event: "GUILD_ROLE_DELETE", listener: (data: GatewayGuildRoleDeleteDispatchData) => void): this;
+        on(event: "CHANNEL_CREATE", listener: (data: GatewayChannelCreateDispatchData) => void): this;
+        on(event: "CHANNEL_UPDATE", listener: (data: GatewayChannelUpdateDispatchData) => void): this;
+        on(event: "CHANNEL_DELETE", listener: (data: GatewayChannelDeleteDispatchData) => void): this;
+        on(event: "CHANNEL_PINS_UPDATE", listener: (data: GatewayChannelPinsUpdateDispatchData) => void): this;
+        on(event: "THREAD_CREATE", listener: (data: GatewayThreadCreateDispatchData) => void): this;
+        on(event: "THREAD_UPDATE", listener: (data: GatewayThreadUpdateDispatchData) => void): this;
+        on(event: "THREAD_DELETE", listener: (data: GatewayThreadDeleteDispatchData) => void): this;
+        on(event: "THREAD_LIST_SYNC", listener: (data: GatewayThreadListSyncDispatchData) => void): this;
+        on(event: "THREAD_MEMBER_UPDATE", listener: (data: GatewayThreadMemberUpdateDispatchData) => void): this;
+        on(event: "THREAD_MEMBERS_UPDATE", listener: (data: GatewayThreadMembersUpdateDispatchData) => void): this;
+        on(event: "STAGE_INSTANCE_CREATE", listener: (data: GatewayStageInstanceCreateDispatchData) => void): this;
+        on(event: "STAGE_INSTANCE_UPDATE", listener: (data: GatewayStageInstanceUpdateDispatchData) => void): this;
+        on(event: "STAGE_INSTANCE_DELETE", listener: (data: GatewayStageInstanceDeleteDispatchData) => void): this;
+        on(event: "GUILD_MEMBER_ADD", listener: (data: GatewayGuildMemberAddDispatchData) => void): this;
+        on(event: "GUILD_MEMBER_UPDATE", listener: (data: GatewayGuildMemberUpdateDispatchData) => void): this;
+        on(event: "GUILD_MEMBER_REMOVE", listener: (data: GatewayGuildMemberRemoveDispatchData) => void): this;
+        on(event: "GUILD_AUDIT_LOG_ENTRY_CREATE", listener: (data: GatewayGuildAuditLogEntryCreateDispatchData) => void): this;
+        on(event: "GUILD_BAN_ADD", listener: (data: GatewayGuildBanAddDispatchData) => void): this;
+        on(event: "GUILD_BAN_REMOVE", listener: (data: GatewayGuildBanRemoveDispatchData) => void): this;
+        on(event: "GUILD_EMOJIS_UPDATE", listener: (data: GatewayGuildEmojisUpdateDispatchData) => void): this;
+        on(event: "GUILD_STICKERS_UPDATE", listener: (data: GatewayGuildStickersUpdateDispatchData) => void): this;
+        on(event: "GUILD_INTEGRATIONS_UPDATE", listener: (data: GatewayGuildIntegrationsUpdateDispatchData) => void): this;
+        on(event: "INTEGRATION_CREATE", listener: (data: GatewayIntegrationCreateDispatchData) => void): this;
+        on(event: "INTEGRATION_UPDATE", listener: (data: GatewayIntegrationUpdateDispatchData) => void): this;
+        on(event: "INTEGRATION_DELETE", listener: (data: GatewayIntegrationDeleteDispatchData) => void): this;
+        on(event: "WEBHOOKS_UPDATE", listener: (data: GatewayWebhooksUpdateDispatchData) => void): this;
+        on(event: "INVITE_CREATE", listener: (data: GatewayInviteCreateDispatchData) => void): this;
+        on(event: "INVITE_DELETE", listener: (data: GatewayInviteDeleteDispatchData) => void): this;
+        on(event: "PRESENCE_UPDATE", listener: (data: GatewayPresenceUpdateData) => void): this;
+        on(event: "MESSAGE_CREATE", listener: (data: GatewayMessageCreateDispatchData) => void): this;
+        on(event: "MESSAGE_UPDATE", listener: (data: GatewayMessageUpdateDispatchData) => void): this;
+        on(event: "MESSAGE_DELETE", listener: (data: GatewayMessageDeleteDispatchData) => void): this;
+        on(event: "MESSAGE_DELETE_BULK", listener: (data: GatewayMessageDeleteBulkDispatchData) => void): this;
+        on(event: "MESSAGE_REACTION_ADD", listener: (data: GatewayMessageReactionAddDispatchData) => void): this;
+        on(event: "MESSAGE_REACTION_REMOVE", listener: (data: GatewayMessageReactionRemoveDispatchData) => void): this;
+        on(event: "MESSAGE_REACTION_REMOVE_ALL", listener: (data: GatewayMessageReactionRemoveAllDispatchData) => void): this;
+        on(event: "MESSAGE_REACTION_REMOVE_EMOJI", listener: (data: GatewayMessageReactionRemoveEmojiDispatchData) => void): this;
+        on(event: "TYPING_START", listener: (data: GatewayTypingStartDispatchData) => void): this;
+        on(event: "CHANNEL_PIN_UPDATE", listener: (data: GatewayChannelPinsUpdateDispatchData) => void): this;
+        on(event: "GUILD_SCHEDULED_EVENT_CREATE", listener: (data: GatewayGuildScheduledEventCreateDispatchData) => void): this;
+        on(event: "GUILD_SCHEDULED_EVENT_UPDATE", listener: (data: GatewayGuildScheduledEventUpdateDispatchData) => void): this;
+        on(event: "GUILD_SCHEDULED_EVENT_DELETE", listener: (data: GatewayGuildScheduledEventDeleteDispatchData) => void): this;
+        on(event: "GUILD_SCHEDULED_EVENT_USER_ADD", listener: (data: GatewayGuildScheduledEventUserAddDispatchData) => void): this;
+        on(event: "GUILD_SCHEDULED_EVENT_USER_REMOVE", listener: (data: GatewayGuildScheduledEventUserRemoveDispatchData) => void): this;
+        on(event: "AUTO_MODERATION_RULE_CREATE", listener: (data: GatewayAutoModerationRuleCreateDispatchData) => void): this;
+        on(event: "AUTO_MODERATION_RULE_UPDATE", listener: (data: GatewayAutoModerationRuleUpdateDispatchData) => void): this;
+        on(event: "AUTO_MODERATION_RULE_DELETE", listener: (data: GatewayAutoModerationRuleDeleteDispatchData) => void): this;
+        on(event: "AUTO_MODERATION_ACTION_EXECUTION", listener: (data: GatewayAutoModerationActionExecutionDispatchData) => void): this;
+
+        on(event: "USER_UPDATE", listener: (data: GatewayUserUpdateDispatchData) => void): this;
+        on(event: "VOICE_STATE_UPDATE", listener: (data: GatewayVoiceStateUpdateDispatchData) => void): this;
+        on(event: "VOICE_SERVER_UPDATE", listener: (data: GatewayVoiceServerUpdateDispatchData) => void): this;
     }
 
     class Client {
