@@ -1,6 +1,6 @@
 import Websocket from 'ws';
 import {GatewayOPCodes} from "discord-api-types/v6";
-import {GatewayCloseCodes, PresenceUpdateStatus, GatewayIdentifyData} from "discord-api-types/v10";
+import {GatewayCloseCodes, PresenceUpdateStatus} from "discord-api-types/v10";
 import {stringify} from 'node:querystring';
 
 

@@ -182,8 +182,8 @@ declare module 'pioucord' {
         readonly ping: number;
         readonly shardsCount: number;
 
-        public on<K extends keyof WebsocketEvents>(event: K, listener: (data: WebsocketEvents[K]) => any): this;
-        public once<K extends keyof WebsocketEvents>(event: K, listener: (data: WebsocketEvents[K]) => any): this;
+        public on<K extends keyof WebsocketEvents>(event: K, listener: (data: {shardId: number | null, client: Client} & WebsocketEvents[K]) => any): this;
+        public once<K extends keyof WebsocketEvents>(event: K, listener: (data: {shardId: number | null, client: Client} & WebsocketEvents[K]) => any): this;
     }
 
     export interface WebsocketEvents {
