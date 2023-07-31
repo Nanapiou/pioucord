@@ -62,21 +62,10 @@ declare module 'pioucord' {
         GatewayAutoModerationActionExecutionDispatchData,
         GatewayUserUpdateDispatchData,
         GatewayVoiceServerUpdateDispatchData,
-        GatewayVoiceStateUpdateDispatchData
+        GatewayVoiceStateUpdateDispatchData,
+        GatewayIntentBits
     } from "discord-api-types/v10";
     import EventEmitter from "events";
-
-    interface ActivityData {
-        name: string,
-        type: number,
-        url?: string,
-    }
-
-    interface PresenceData {
-        status?: "online" | "dnd" | "invisible" | "idle";
-        afk?: boolean;
-        activities?: ActivityData[];
-    }
 
     interface RestOptions {
         authPrefix?: "Bot" | "Bearer";
@@ -85,17 +74,17 @@ declare module 'pioucord' {
         token?: string
     }
 
-    type IntentResolvable = string | number | bigint | IntentResolvable[];
+    type IntentResolvable = keyof typeof GatewayIntentBits | number | bigint | IntentResolvable[];
 
     interface ClientOptions {
-        intents?: IntentResolvable;
-        presence?: PresenceData;
+        intents: IntentResolvable;
+        presence?: GatewayPresenceUpdateData;
         shards?: number[];
         shardsCount?: number;
         useRecommendedShardCount?: boolean;
         userBot?: boolean;
         apiVersion?: string;
-        api?: RestOptions;
+        rest?: RestOptions;
     }
 
     interface CacheOptions {
@@ -159,10 +148,10 @@ declare module 'pioucord' {
             shard?: number[],
             largeThreshold?: number,
             compress?: boolean,
-            presence?: PresenceData
+            presence?: GatewayPresenceUpdateData
         }) => unknown;
         resume: () => unknown;
-        setPresence: (presenceObject: PresenceData) => void;
+        setPresence: (presenceObject: GatewayPresenceUpdateData) => void;
         requestGuildMembers: (options: {
             guildId: string,
             query?: string,
@@ -279,12 +268,12 @@ declare module 'pioucord' {
         ws: WebSocketManager;
         rest: Rest;
         login: (token: string) => Promise<APIUser>;
-        setPresence: (presenceObject: PresenceData) => void;
+        setPresence: (presenceObject: GatewayPresenceUpdateData) => void;
         addGuildEvents: (guildId: string) => void;
         readonly uptime: number | null;
         destroy: () => void;
     }
 
     export * from 'discord-api-types/v10'
-    export {Client, ClientOptions, PresenceData, IntentResolvable, Rest, RestOptions, Cache, CacheOptions}
+    export {Client, ClientOptions, IntentResolvable, Rest, RestOptions, Cache, CacheOptions}
 }
