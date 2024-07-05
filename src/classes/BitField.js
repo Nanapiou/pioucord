@@ -89,7 +89,8 @@ export default class BitField {
                 if (val !== undefined) return val;
                 else throw new TypeError('Invalid type');
             case "string":
-                const bit = BigInt(this.flags?.[value]);
+                const flagVal = this.flags[value];
+                const bit = isNaN(flagVal) ? BigInt(value) : BigInt(flagVal);
                 if (bit === undefined) throw new Error('Cannot find ' + value);
                 return bit;
             default:
